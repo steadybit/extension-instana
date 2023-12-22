@@ -1,4 +1,4 @@
-<img src="./logo.png" height="130" align="right" alt="Instana logo">
+<img src="./logo.png" height="100" align="right" alt="Instana logo">
 
 # Steadybit extension-instana
 
