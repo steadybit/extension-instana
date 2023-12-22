@@ -1,42 +1,53 @@
-# Steadybit Extension Scaffold
+<img src="./logo.png" height="130" align="right" alt="Instana logo">
 
-This repository contains a scaffold with a sample implementation of a [Steadybit extension](https://docs.steadybit.com/integrate-with-steadybit/extensions). You may find this repository helpful…
+# Steadybit extension-instana
 
- - [When you want to understand what Steadybit extensions are](#understanding-the-extension-mechanism).
- - [When you want to build a Steadybit extension](#for-extension-authors)
+A [Steadybit](https://www.steadybit.com/) extension for [Instana](https://www.ibm.com/de-de/products/instana).
 
-Please follow one of the links above to move to the appropriate documentation sections.
+Learn about the capabilities of this extension in our [Reliability Hub](https://hub.steadybit.com/extension/com.steadybit.extension_instana).
 
-## Understanding the Extension Mechanism
+## Configuration
 
-One of the best ways to understand the extension mechanism is to run an extension and experiment with its APIs. We have prepared Gitpod and GitHub codespaces setups to make this as easy as possible for you.
+| Environment Variable            | Helm value | Meaning                                                                                                                                               | Required | Default |
+|---------------------------------|------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|----------|---------|
+| `STEADYBIT_EXTENSION_BASE_URL`  |            | The Instana Base Url, like `https://$UNIT-$TENANT.instana.io`                                                                                         | yes      |         |
+| `STEADYBIT_EXTENSION_API_TOKEN` |            | The Instana [API Token](https://www.ibm.com/docs/en/instana-observability/current?topic=apis-web-rest-api#tokens), see the required permissions below | yes      |         |
 
-When you click one of these buttons, you will be directed to an online editor with a locally running extension, and the file `README.http` will open. This file contains documentation and HTTP calls you can execute to learn about extensions and this specific sample implementation.
+The extension supports all environment variables provided
+by [steadybit/extension-kit](https://github.com/steadybit/extension-kit#environment-variables).
 
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](http://gitpod.io/#https://github.com/steadybit/extension-scaffold/blob/main/README.http)
+## Instana Permissions
 
+The apiToken requires the following permissions:
+- `TODO`
 
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=595972094)
+## Installation
 
+### Using Docker
 
-## For Extension Authors
+```sh
+docker run \
+  --rm \
+  -p 8080 \
+  --name steadybit-extension-instana \
+  ghcr.io/steadybit/extension-instana:latest
+```
 
-**Note:** We recommend that you [understand the extension mechanism](#understanding-the-extension-mechanism) before following these instructions.
+### Using Helm in Kubernetes
 
-This repository ships with everything Steadybit extensions might need:
- - Basic usage of and initialization for ActionKit, DiscoveryKit, EventKit and ExtensionKit.
- - Extension configuration support.
- - Dockerfile and Helm chart.
- - GitHub actions for building, testing and publishing Docker images and Helm charts.
- - and more.
+```sh
+helm repo add steadybit-extension-instana https://steadybit.github.io/extension-instana
+helm repo update
+helm upgrade steadybit-extension-instana \
+    --install \
+    --wait \
+    --timeout 5m0s \
+    --create-namespace \
+    --namespace steadybit-extension \
+    steadybit-extension-instana/steadybit-extension-instana
+```
 
-To use this scaffold, you need to:
+## Register the extension
 
- 1. Get a copy of this scaffold. [Use GitHub's repository template feature](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template), [fork the repository](https://github.com/steadybit/extension-scaffold/fork) or [download it](https://github.com/steadybit/extension-scaffold/archive/refs/heads/main.zip).
- 2. Execute `make eject` within the copy to replace the readme, license etc. files with some more appropriate starting points.
- 3. Delete the `.github/workflows/cla.yml` workflow or allow access to the access for CLA verification.
- 4. Rename all occurrences of `extension-scaffold` to `extension-{{other name}}`
- 5. Verify that the Docker and Helm installation instructions are correct in the `README.md`
- 6. Create an empty branch named "gh-pages"
- 7. After the first build, ensure that you make the Docker image public through `packages -> {{your package name}} -> Package settings -> Change visibility`
-
+Make sure to register the extension at the steadybit platform. Please refer to
+the [documentation](https://docs.steadybit.com/integrate-with-steadybit/extensions/extension-installation) for more information.
