@@ -1,0 +1,18 @@
+[Unit]
+Description="steadybit extension instana"
+After=syslog.target
+
+[Service]
+Type=simple
+ExecStart=/opt/steadybit/extension-instana/extension-instana
+EnvironmentFile=/etc/steadybit/extension-instana
+User=steadybit
+Group=steadybit
+SuccessExitStatus=0 143
+Restart=on-failure
+RestartSec=5s
+StandardOutput=append:/var/log/steadybit-extension-instana.log
+StandardError=append:/var/log/steadybit-extension-instana.log
+
+[Install]
+WantedBy=multi-user.target

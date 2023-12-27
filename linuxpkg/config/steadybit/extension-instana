@@ -1,0 +1,11 @@
+STEADYBIT_LOG_LEVEL=info
+STEADYBIT_LOG_FORMAT=text
+STEADYBIT_EXTENSION_UNIX_SOCKET=/run/steadybit/extension-instana.sock
+#
+# TODO:
+# Please configure the api token and api base url for your instana account
+# For more information visit https://github.com/steadybit/extension-instana
+#
+STEADYBIT_EXTENSION_API_TOKEN=
+STEADYBIT_EXTENSION_BASE_URL=
+

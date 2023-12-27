@@ -1,0 +1,5 @@
+unixSocket: /run/steadybit/extension-instana.sock
+types:
+  - ACTION
+  - DISCOVERY
+  - EVENT
