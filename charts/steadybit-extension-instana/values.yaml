@@ -1,6 +1,15 @@
 # Default values for steadybit-extension-instana.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
+
+instana:
+  # instana.baseUrl -- The base url for the Instana, like 'https://unit-example.instana.io'
+  baseUrl: ""
+  # instana.apiToken -- The API Token used to access the Instana API.
+  apiToken: ""
+  # instana.existingSecret -- If defined, will skip secret creation and instead assume that the referenced secret contains the key `api-token`.
+  existingSecret: null
+
 image:
   # image.name -- The container image to use for the Steadybit instana extension.
   name: ghcr.io/steadybit/extension-instana

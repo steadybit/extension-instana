@@ -53,6 +53,13 @@ spec:
             {{- with .Values.extraEnv }}
               {{- toYaml . | nindent 12 }}
             {{- end }}
+            - name: STEADYBIT_EXTENSION_API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "instana.secret.name" . }}
+                  key: api-token
+            - name: STEADYBIT_EXTENSION_BASE_URL
+              value: {{ .Values.instana.baseUrl }}
           {{- with .Values.extraEnvFrom }}
           envFrom:
             {{- toYaml . | nindent 12 }}
