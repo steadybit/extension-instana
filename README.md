@@ -16,11 +16,6 @@ Learn about the capabilities of this extension in our [Reliability Hub](https://
 The extension supports all environment variables provided
 by [steadybit/extension-kit](https://github.com/steadybit/extension-kit#environment-variables).
 
-## Instana Permissions
-
-The apiToken requires the following permissions:
-- `TODO`
-
 ## Installation
 
 ### Using Docker
