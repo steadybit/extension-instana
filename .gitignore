@@ -2,5 +2,5 @@
 /coverage.out
 /e2e/e2e-coverage-docker.out
 /licenses
-
 /extension-instana.run.xml
+/gpg.key
