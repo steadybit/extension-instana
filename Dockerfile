@@ -49,6 +49,7 @@ WORKDIR /
 COPY --from=build /app/extension /extension
 COPY --from=build /app/licenses /licenses
 
-EXPOSE 8080
+EXPOSE 8090
+EXPOSE 8091
 
 ENTRYPOINT ["/extension"]

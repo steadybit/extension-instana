@@ -74,7 +74,7 @@ spec:
             failureThreshold: {{ .Values.probes.liveness.failureThreshold }}
             httpGet:
               path: /health/liveness
-              port: 8081
+              port: 8091
           readinessProbe:
             initialDelaySeconds: {{ .Values.probes.readiness.initialDelaySeconds }}
             periodSeconds: {{ .Values.probes.readiness.periodSeconds }}
@@ -83,7 +83,7 @@ spec:
             failureThreshold: {{ .Values.probes.readiness.failureThreshold }}
             httpGet:
               path: /health/readiness
-              port: 8081
+              port: 8091
           securityContext:
             readOnlyRootFilesystem: true
             runAsNonRoot: true

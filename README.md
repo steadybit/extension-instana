@@ -23,7 +23,7 @@ by [steadybit/extension-kit](https://github.com/steadybit/extension-kit#environm
 ```sh
 docker run \
   --rm \
-  -p 8080 \
+  -p 8090 \
   --name steadybit-extension-instana \
   ghcr.io/steadybit/extension-instana:latest
 ```
