@@ -5,15 +5,15 @@ manifest should match snapshot with TLS:
     metadata:
       annotations:
         steadybit.com/extension-auto-discovery: |
-          {"extensions":[{"port":8080,"protocol":"https","types":["ACTION","DISCOVERY","EVENT"]}]}
+          {"extensions":[{"port":8090,"protocol":"https","types":["ACTION","DISCOVERY","EVENT"]}]}
       labels: null
       name: RELEASE-NAME-steadybit-extension-instana
       namespace: NAMESPACE
     spec:
       ports:
-        - port: 8080
+        - port: 8090
           protocol: TCP
-          targetPort: 8080
+          targetPort: 8090
       selector:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/name: steadybit-extension-instana
@@ -24,15 +24,15 @@ manifest should match snapshot with mutual TLS:
     metadata:
       annotations:
         steadybit.com/extension-auto-discovery: |
-          {"extensions":[{"port":8080,"protocol":"https","types":["ACTION","DISCOVERY","EVENT"]}]}
+          {"extensions":[{"port":8090,"protocol":"https","types":["ACTION","DISCOVERY","EVENT"]}]}
       labels: null
       name: RELEASE-NAME-steadybit-extension-instana
       namespace: NAMESPACE
     spec:
       ports:
-        - port: 8080
+        - port: 8090
           protocol: TCP
-          targetPort: 8080
+          targetPort: 8090
       selector:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/name: steadybit-extension-instana
@@ -43,15 +43,15 @@ manifest should match snapshot with mutual TLS using containerPaths:
     metadata:
       annotations:
         steadybit.com/extension-auto-discovery: |
-          {"extensions":[{"port":8080,"protocol":"https","types":["ACTION","DISCOVERY","EVENT"]}]}
+          {"extensions":[{"port":8090,"protocol":"https","types":["ACTION","DISCOVERY","EVENT"]}]}
       labels: null
       name: RELEASE-NAME-steadybit-extension-instana
       namespace: NAMESPACE
     spec:
       ports:
-        - port: 8080
+        - port: 8090
           protocol: TCP
-          targetPort: 8080
+          targetPort: 8090
       selector:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/name: steadybit-extension-instana
@@ -62,15 +62,15 @@ manifest should match snapshot without TLS:
     metadata:
       annotations:
         steadybit.com/extension-auto-discovery: |
-          {"extensions":[{"port":8080,"protocol":"http","types":["ACTION","DISCOVERY","EVENT"]}]}
+          {"extensions":[{"port":8090,"protocol":"http","types":["ACTION","DISCOVERY","EVENT"]}]}
       labels: null
       name: RELEASE-NAME-steadybit-extension-instana
       namespace: NAMESPACE
     spec:
       ports:
-        - port: 8080
+        - port: 8090
           protocol: TCP
-          targetPort: 8080
+          targetPort: 8090
       selector:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/name: steadybit-extension-instana
