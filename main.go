@@ -14,6 +14,7 @@ import (
 	"github.com/steadybit/extension-instana/config"
 	"github.com/steadybit/extension-instana/extapplications"
 	"github.com/steadybit/extension-instana/extevents"
+	"github.com/steadybit/extension-instana/extmaintenance"
 	"github.com/steadybit/extension-kit/extbuild"
 	"github.com/steadybit/extension-kit/exthealth"
 	"github.com/steadybit/extension-kit/exthttp"
@@ -34,6 +35,7 @@ func main() {
 	exthttp.RegisterHttpHandler("/", exthttp.GetterAsHandler(getExtensionList))
 	discovery_kit_sdk.Register(extapplications.NewApplicationPerspectiveDiscovery())
 	action_kit_sdk.RegisterAction(extevents.NewEventCheckAction())
+	action_kit_sdk.RegisterAction(extmaintenance.NewCreateMaintenanceWindowAction())
 	//extevents.RegisterEventListenerHandlers()
 
 	action_kit_sdk.InstallSignalHandler()

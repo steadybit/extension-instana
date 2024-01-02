@@ -32,7 +32,7 @@ func NewApplicationPerspectiveDiscovery() discovery_kit_sdk.TargetDiscovery {
 }
 func (d *applicationPerspectiveDiscovery) Describe() discovery_kit_api.DiscoveryDescription {
 	return discovery_kit_api.DiscoveryDescription{
-		Id:         applicationPerspectiveTargetId,
+		Id:         ApplicationPerspectiveTargetId,
 		RestrictTo: extutil.Ptr(discovery_kit_api.LEADER),
 		Discover: discovery_kit_api.DescribingEndpointReferenceWithCallInterval{
 			CallInterval: extutil.Ptr("1m"),
@@ -42,7 +42,7 @@ func (d *applicationPerspectiveDiscovery) Describe() discovery_kit_api.Discovery
 
 func (d *applicationPerspectiveDiscovery) DescribeTarget() discovery_kit_api.TargetDescription {
 	return discovery_kit_api.TargetDescription{
-		Id:       applicationPerspectiveTargetId,
+		Id:       ApplicationPerspectiveTargetId,
 		Label:    discovery_kit_api.PluralLabel{One: "Instana application perspective", Other: "Instana application perspectives"},
 		Category: extutil.Ptr("monitoring"),
 		Version:  extbuild.GetSemverVersionStringOrUnknown(),
@@ -113,17 +113,17 @@ func getAllApplicationPerspectives(ctx context.Context, api GetApplicationPerspe
 
 func toTarget(perspective types.ApplicationPerspective) discovery_kit_api.Target {
 	id := perspective.Id
-	name := perspective.Name
+	label := perspective.Label
 
 	attributes := make(map[string][]string)
-	attributes["steadybit.label"] = []string{name}
-	attributes["instana.application.name"] = []string{name}
+	attributes["steadybit.label"] = []string{label}
+	attributes["instana.application.label"] = []string{label}
 	attributes["instana.application.id"] = []string{id}
 
 	return discovery_kit_api.Target{
 		Id:         id,
-		Label:      name,
-		TargetType: applicationPerspectiveTargetId,
+		Label:      label,
+		TargetType: ApplicationPerspectiveTargetId,
 		Attributes: attributes,
 	}
 }

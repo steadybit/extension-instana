@@ -9,7 +9,9 @@ import (
 	"github.com/steadybit/action-kit/go/action_kit_test/e2e"
 	"github.com/steadybit/discovery-kit/go/discovery_kit_test/validate"
 	"github.com/steadybit/extension-instana/extevents"
+	"github.com/steadybit/extension-instana/extmaintenance"
 	"github.com/steadybit/extension-kit/extlogging"
+	"github.com/steadybit/extension-kit/extutil"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"strings"
@@ -44,6 +46,10 @@ func TestWithMinikube(t *testing.T) {
 		{
 			Name: "event check",
 			Test: testEventCheck,
+		},
+		{
+			Name: "create maintenance window",
+			Test: testCreateMaintenanceWindow,
 		},
 	})
 }
@@ -85,4 +91,33 @@ func testEventCheck(t *testing.T, m *e2e.Minikube, e *e2e.Extension) {
 		assert.Equal(t, action_kit_api.Info, *message.Level)
 		assert.Equal(t, "offline - JVM on Host ip-10-10-81-117.eu-central-1.compute.internal", message.Message)
 	}
+}
+
+func testCreateMaintenanceWindow(t *testing.T, m *e2e.Minikube, e *e2e.Extension) {
+	defer func() { Requests = []string{} }()
+
+	target := &action_kit_api.Target{
+		Name: "Application Perspective 1",
+		Attributes: map[string][]string{
+			"instana.application.id":   {"application-id-1"},
+			"instana.application.name": {"application-name-1"},
+		},
+	}
+
+	config := struct {
+		Duration int `json:"duration"`
+	}{Duration: 10000}
+
+	executionContext := &action_kit_api.ExecutionContext{
+		ExperimentKey: extutil.Ptr("TST-1"),
+		ExecutionId:   extutil.Ptr(47),
+	}
+
+	action, err := e.RunAction(extmaintenance.MaintenanceWindowActionId, target, config, executionContext)
+	defer func() { _ = action.Cancel() }()
+	require.NoError(t, err)
+	err = action.Wait()
+	require.NoError(t, err)
+	require.Contains(t, Requests, "PUT-/api/settings/v2/maintenance/TST-1-47")
+	require.Contains(t, Requests, "DELETE-/api/settings/v2/maintenance/TST-1-47")
 }

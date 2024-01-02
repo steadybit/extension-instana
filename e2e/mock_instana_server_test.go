@@ -24,6 +24,11 @@ func createMockInstanaServer() *httptest.Server {
 			if strings.HasPrefix(r.URL.Path, "/api/events") && r.Method == http.MethodGet {
 				w.WriteHeader(http.StatusOK)
 				_, _ = w.Write(events())
+			} else if strings.HasPrefix(r.URL.Path, "/api/settings/v2/maintenance") && r.Method == http.MethodPut {
+				w.WriteHeader(http.StatusOK)
+				_, _ = w.Write(maintenanceWindowCreated())
+			} else if strings.HasPrefix(r.URL.Path, "/api/settings/v2/maintenance") && r.Method == http.MethodDelete {
+				w.WriteHeader(http.StatusOK)
 			} else {
 				w.WriteHeader(http.StatusBadRequest)
 			}
@@ -52,4 +57,32 @@ func events() []byte {
         "snapshotId": "-QEDb2D3jtvz7vYJOMYcxTSEyXQ"
     }
 ]`)
+}
+
+func maintenanceWindowCreated() []byte {
+	return []byte(`{
+        "id": "TST-1-47",
+        "name": "Dev Deployment",
+        "query": "entity.zone:dev-eu-central-1-eks",
+        "scheduling": {
+            "start": 1678954777825,
+            "duration": {
+                "amount": 20,
+                "unit": "MINUTES"
+            },
+            "type": "ONE_TIME"
+        },
+        "paused": false,
+        "lastUpdated": 1702373873467,
+        "state": "EXPIRED",
+        "validVersion": 1,
+        "tagFilterExpression": null,
+        "tagFilterExpressionEnabled": false,
+        "occurrence": {
+            "start": 1678954777825,
+            "end": 1678955977825
+        },
+        "invalid": false,
+        "applicationNames": []
+    }`)
 }

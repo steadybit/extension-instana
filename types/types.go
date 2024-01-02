@@ -15,10 +15,27 @@ type Event struct {
 }
 
 type ApplicationPerspective struct {
-	Id   string `json:"id"`
-	Name string `json:"name"`
+	Id    string `json:"id"`
+	Label string `json:"label"`
 }
 
 type ApplicationPerspectiveResponse struct {
 	Items []ApplicationPerspective `json:"items"`
+}
+
+type CreateMaintenanceWindowRequest struct {
+	Id         string   `json:"id"`
+	Name       string   `json:"name"`
+	Query      string   `json:"query"`
+	Scheduling Schedule `json:"scheduling"`
+}
+
+type Schedule struct {
+	Duration Duration `json:"duration"`
+	Start    int64    `json:"start"`
+	Type     string   `json:"type"`
+}
+type Duration struct {
+	Amount int64  `json:"amount"`
+	Unit   string `json:"unit"`
 }

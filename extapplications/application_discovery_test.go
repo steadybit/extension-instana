@@ -29,14 +29,14 @@ func TestIterateThroughMonitorsResponses(t *testing.T) {
 	mockedApi := new(instanaApiMock)
 	page1 := []types.ApplicationPerspective{
 		{
-			Id:   "id1",
-			Name: "name1",
+			Id:    "id1",
+			Label: "name1",
 		},
 	}
 	page2 := []types.ApplicationPerspective{
 		{
-			Id:   "id2",
-			Name: "name2",
+			Id:    "id2",
+			Label: "name2",
 		},
 	}
 	var page3 []types.ApplicationPerspective
@@ -62,8 +62,8 @@ func TestErrorResponseReturnsIntermediateResult(t *testing.T) {
 	mockedApi := new(instanaApiMock)
 	page1 := []types.ApplicationPerspective{
 		{
-			Id:   "id1",
-			Name: "name1",
+			Id:    "id1",
+			Label: "name1",
 		},
 	}
 

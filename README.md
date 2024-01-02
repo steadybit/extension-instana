@@ -16,6 +16,11 @@ Learn about the capabilities of this extension in our [Reliability Hub](https://
 The extension supports all environment variables provided
 by [steadybit/extension-kit](https://github.com/steadybit/extension-kit#environment-variables).
 
+## Permissions
+
+The extension requires the following scopes:
+- "Configuration of Events, Alerts and Smart Alerts for Applications, websites and mobile apps" - `canConfigureCustomAlerts` (if you want to use the "Create Maintenance Window" action)
+
 ## Installation
 
 ### Using Docker

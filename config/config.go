@@ -94,6 +94,42 @@ func (s *Specification) GetApplicationPerspectives(_ context.Context, page int, 
 	return result.Items, err
 }
 
+func (s *Specification) CreateMaintenanceWindow(_ context.Context, maintenanceWindow types.CreateMaintenanceWindowRequest) (*string, *http.Response, error) {
+	objects := []types.CreateMaintenanceWindowRequest{maintenanceWindow}
+
+	b, err := json.Marshal(objects)
+	if err != nil {
+		log.Error().Err(err).Msgf("Failed to marshal request")
+		return nil, nil, err
+	}
+
+	responseBody, response, err := s.do(fmt.Sprintf("%s/api/settings/v2/maintenance/%s", s.BaseUrl, maintenanceWindow.Id), "PUT", b)
+	if err != nil {
+		return nil, response, err
+	}
+
+	if response.StatusCode != 200 {
+		log.Error().Int("code", response.StatusCode).Err(err).Msgf("Unexpected response %+v", string(responseBody))
+		return nil, response, errors.New("unexpected response code")
+	}
+
+	var result types.CreateMaintenanceWindowRequest
+	if responseBody != nil {
+		err = json.Unmarshal(responseBody, &result)
+		if err != nil {
+			log.Error().Err(err).Str("body", string(responseBody)).Msgf("Failed to parse response body")
+			return nil, response, err
+		}
+	}
+
+	return &result.Id, response, err
+}
+
+func (s *Specification) DeleteMaintenanceWindow(_ context.Context, maintenanceWindowId string) (*http.Response, error) {
+	_, response, err := s.do(fmt.Sprintf("%s/api/settings/v2/maintenance/%s", s.BaseUrl, maintenanceWindowId), "DELETE", nil)
+	return response, err
+}
+
 func (s *Specification) do(url string, method string, body []byte) ([]byte, *http.Response, error) {
 	log.Debug().Str("url", url).Str("method", method).Msg("Requesting Instana API")
 	if body != nil {
