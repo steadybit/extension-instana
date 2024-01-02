@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/steadybit/action-kit/go/action_kit_api/v2"
 	"github.com/steadybit/action-kit/go/action_kit_test/e2e"
+	"github.com/steadybit/discovery-kit/go/discovery_kit_test/validate"
 	"github.com/steadybit/extension-instana/extevents"
 	"github.com/steadybit/extension-kit/extlogging"
 	"github.com/stretchr/testify/assert"
@@ -37,10 +38,18 @@ func TestWithMinikube(t *testing.T) {
 
 	e2e.WithDefaultMinikube(t, &extFactory, []e2e.WithMinikubeTestCase{
 		{
+			Name: "validate discovery",
+			Test: validateDiscovery,
+		},
+		{
 			Name: "event check",
 			Test: testEventCheck,
 		},
 	})
+}
+
+func validateDiscovery(t *testing.T, _ *e2e.Minikube, e *e2e.Extension) {
+	assert.NoError(t, validate.ValidateEndpointReferences("/", e.Client))
 }
 
 func testEventCheck(t *testing.T, m *e2e.Minikube, e *e2e.Extension) {

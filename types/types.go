@@ -13,3 +13,8 @@ type Event struct {
 	EntityLabel string `json:"entityLabel"`
 	EntityType  string `json:"entityType"`
 }
+
+type ApplicationPerspective struct {
+	Id   string `json:"id"`
+	Name string `json:"name"`
+}

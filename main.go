@@ -12,6 +12,7 @@ import (
 	"github.com/steadybit/discovery-kit/go/discovery_kit_sdk"
 	"github.com/steadybit/event-kit/go/event_kit_api"
 	"github.com/steadybit/extension-instana/config"
+	"github.com/steadybit/extension-instana/extapplications"
 	"github.com/steadybit/extension-instana/extevents"
 	"github.com/steadybit/extension-kit/extbuild"
 	"github.com/steadybit/extension-kit/exthealth"
@@ -31,6 +32,7 @@ func main() {
 	exthealth.StartProbes(8091)
 
 	exthttp.RegisterHttpHandler("/", exthttp.GetterAsHandler(getExtensionList))
+	discovery_kit_sdk.Register(extapplications.NewApplicationPerspectiveDiscovery())
 	action_kit_sdk.RegisterAction(extevents.NewEventCheckAction())
 	//extevents.RegisterEventListenerHandlers()
 

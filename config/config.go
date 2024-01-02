@@ -39,7 +39,7 @@ func ParseConfiguration() {
 	}
 }
 
-func (s *Specification) GetEvents(ctx context.Context, from time.Time, to time.Time, eventTypeFilters []string) ([]types.Event, *http.Response, error) {
+func (s *Specification) GetEvents(_ context.Context, from time.Time, to time.Time, eventTypeFilters []string) ([]types.Event, error) {
 	url := fmt.Sprintf("%s/api/events?excludeTriggeredBefore=true&from=%d&to=%d", s.BaseUrl, from.UnixMilli(), to.UnixMilli())
 	for _, eventTypeFilter := range eventTypeFilters {
 		url = fmt.Sprintf("%s&eventTypeFilters=%s", url, eventTypeFilter)
@@ -47,12 +47,13 @@ func (s *Specification) GetEvents(ctx context.Context, from time.Time, to time.T
 
 	responseBody, response, err := s.do(url, "GET", nil)
 	if err != nil {
-		return nil, response, err
+		log.Error().Err(err).Msgf("Failed to get events from Instana. Full response %+v", string(responseBody))
+		return nil, err
 	}
 
 	if response.StatusCode != 200 {
 		log.Error().Int("code", response.StatusCode).Err(err).Msgf("Unexpected response %+v", string(responseBody))
-		return nil, response, errors.New("unexpected response code")
+		return nil, errors.New("unexpected response code")
 	}
 
 	var result []types.Event
@@ -60,11 +61,37 @@ func (s *Specification) GetEvents(ctx context.Context, from time.Time, to time.T
 		err = json.Unmarshal(responseBody, &result)
 		if err != nil {
 			log.Error().Err(err).Str("body", string(responseBody)).Msgf("Failed to parse body")
-			return nil, response, err
+			return nil, err
 		}
 	}
 
-	return result, response, err
+	return result, err
+}
+
+func (s *Specification) GetApplicationPerspectives(_ context.Context, page int, pageSize int) ([]types.ApplicationPerspective, error) {
+	url := fmt.Sprintf("%s/api/application-monitoring/applications?page=%d&pageSize=%d", s.BaseUrl, page, pageSize)
+
+	responseBody, response, err := s.do(url, "GET", nil)
+	if err != nil {
+		log.Error().Err(err).Msgf("Failed to get application perspectives from Instana. Full response %+v", string(responseBody))
+		return nil, err
+	}
+
+	if response.StatusCode != 200 {
+		log.Error().Int("code", response.StatusCode).Int("page", page).Int("pageSize", pageSize).Err(err).Msgf("Unexpected response %+v", string(responseBody))
+		return nil, errors.New("unexpected response code")
+	}
+
+	var result []types.ApplicationPerspective
+	if responseBody != nil {
+		err = json.Unmarshal(responseBody, &result)
+		if err != nil {
+			log.Error().Int("page", page).Int("pageSize", pageSize).Err(err).Str("body", string(responseBody)).Msgf("Failed to parse body")
+			return nil, err
+		}
+	}
+
+	return result, err
 }
 
 func (s *Specification) do(url string, method string, body []byte) ([]byte, *http.Response, error) {

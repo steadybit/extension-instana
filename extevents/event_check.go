@@ -14,7 +14,6 @@ import (
 	extension_kit "github.com/steadybit/extension-kit"
 	"github.com/steadybit/extension-kit/extbuild"
 	"github.com/steadybit/extension-kit/extutil"
-	"net/http"
 	"time"
 )
 
@@ -223,15 +222,15 @@ func (m *EventCheckAction) Status(ctx context.Context, state *EventCheckState) (
 }
 
 type EventsApi interface {
-	GetEvents(ctx context.Context, from time.Time, to time.Time, eventTypeFilters []string) ([]types.Event, *http.Response, error)
+	GetEvents(ctx context.Context, from time.Time, to time.Time, eventTypeFilters []string) ([]types.Event, error)
 }
 
 func EventCheckStatus(ctx context.Context, state *EventCheckState, api EventsApi) (*action_kit_api.StatusResult, error) {
 	now := time.Now()
-	events, resp, err := api.GetEvents(ctx, state.LastFetch, now, state.EventTypeFilters)
+	events, err := api.GetEvents(ctx, state.LastFetch, now, state.EventTypeFilters)
 	state.LastFetch = now
 	if err != nil {
-		return nil, extension_kit.ToError(fmt.Sprintf("Failed to get events from Instana. Full response: %v", resp), err)
+		return nil, extension_kit.ToError("Failed to get events from Instana.", err)
 	}
 
 	filteredEvents := make([]types.Event, 0)
