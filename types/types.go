@@ -18,3 +18,7 @@ type ApplicationPerspective struct {
 	Id   string `json:"id"`
 	Name string `json:"name"`
 }
+
+type ApplicationPerspectiveResponse struct {
+	Items []ApplicationPerspective `json:"items"`
+}

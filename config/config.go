@@ -82,7 +82,7 @@ func (s *Specification) GetApplicationPerspectives(_ context.Context, page int, 
 		return nil, errors.New("unexpected response code")
 	}
 
-	var result []types.ApplicationPerspective
+	var result types.ApplicationPerspectiveResponse
 	if responseBody != nil {
 		err = json.Unmarshal(responseBody, &result)
 		if err != nil {
@@ -91,7 +91,7 @@ func (s *Specification) GetApplicationPerspectives(_ context.Context, page int, 
 		}
 	}
 
-	return result, err
+	return result.Items, err
 }
 
 func (s *Specification) do(url string, method string, body []byte) ([]byte, *http.Response, error) {
