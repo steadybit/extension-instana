@@ -61,6 +61,14 @@ func validateDiscovery(t *testing.T, _ *e2e.Minikube, e *e2e.Extension) {
 func testEventCheck(t *testing.T, m *e2e.Minikube, e *e2e.Extension) {
 	defer func() { Requests = []string{} }()
 
+	target := &action_kit_api.Target{
+		Name: "Application Perspective 1",
+		Attributes: map[string][]string{
+			"instana.application.id":   {"application-id-1"},
+			"instana.application.name": {"application-name-1"},
+		},
+	}
+
 	config := struct {
 		Duration            int      `json:"duration"`
 		EventSeverityFilter string   `json:"eventSeverityFilter"`
@@ -71,7 +79,7 @@ func testEventCheck(t *testing.T, m *e2e.Minikube, e *e2e.Extension) {
 
 	executionContext := &action_kit_api.ExecutionContext{}
 
-	action, err := e.RunAction(extevents.EventCheckActionId, nil, config, executionContext)
+	action, err := e.RunAction(extevents.EventCheckActionId, target, config, executionContext)
 	defer func() { _ = action.Cancel() }()
 	require.NoError(t, err)
 	err = action.Wait()
@@ -86,6 +94,7 @@ func testEventCheck(t *testing.T, m *e2e.Minikube, e *e2e.Extension) {
 	}, 5*time.Second, 500*time.Millisecond)
 	messages := action.Messages()
 
+	assert.Len(t, messages, 1)
 	for _, message := range messages {
 		assert.Equal(t, "INSTANA", *message.Type)
 		assert.Equal(t, action_kit_api.Info, *message.Level)

@@ -12,6 +12,7 @@ type Event struct {
 	EntityName  string `json:"entityName"`
 	EntityLabel string `json:"entityLabel"`
 	EntityType  string `json:"entityType"`
+	SnapshotId  string `json:"snapshotId"`
 }
 
 type ApplicationPerspective struct {
@@ -21,6 +22,15 @@ type ApplicationPerspective struct {
 
 type ApplicationPerspectiveResponse struct {
 	Items []ApplicationPerspective `json:"items"`
+	Links map[string]string        `json:"_links"`
+}
+
+type SnapshotSearchResponse struct {
+	Items []Snapshot `json:"items"`
+}
+
+type Snapshot struct {
+	SnapshotId string `json:"snapshotId"`
 }
 
 type CreateMaintenanceWindowRequest struct {

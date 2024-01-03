@@ -78,33 +78,34 @@ func (d *applicationPerspectiveDiscovery) DiscoverTargets(ctx context.Context) (
 }
 
 type GetApplicationPerspectivesApi interface {
-	GetApplicationPerspectives(ctx context.Context, page int, pageSize int) ([]types.ApplicationPerspective, error)
+	GetApplicationPerspectives(ctx context.Context, page int, pageSize int) (*types.ApplicationPerspectiveResponse, error)
 }
 
 func getAllApplicationPerspectives(ctx context.Context, api GetApplicationPerspectivesApi) []discovery_kit_api.Target {
 	result := make([]discovery_kit_api.Target, 0, 500)
 
 	pageSize := 100
-	page := 0
+	page := 1
 
 	start := time.Now()
 	for {
 		log.Debug().Int("page", page).Msg("Fetch application perspectives from Instana")
-		perspectives, err := api.GetApplicationPerspectives(ctx, page, pageSize)
+		response, err := api.GetApplicationPerspectives(ctx, page, pageSize)
 		if err != nil {
 			log.Err(err).Msgf("Failed to get application perspectives from Instana for page %d and page size %d.", page, pageSize)
 			return result
 		}
 
-		if len(perspectives) == 0 {
-			// end of list reached
-			break
-		}
-
+		perspectives := response.Items
 		for _, perspective := range perspectives {
 			result = append(result, toTarget(perspective))
 		}
 
+		_, hasMore := response.Links["next"]
+		if len(perspectives) == 0 || !hasMore {
+			// end of list reached
+			break
+		}
 		page = page + 1
 	}
 	log.Debug().Msgf("Discovery took %s, returning %d application perspectives.", time.Since(start), len(result))

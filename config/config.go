@@ -38,6 +38,38 @@ func ParseConfiguration() {
 		log.Fatal().Err(err).Msgf("Failed to parse configuration from environment.")
 	}
 }
+func (s *Specification) GetSnapshotIds(_ context.Context, applicationPerspectiveId string) ([]string, error) {
+	url := fmt.Sprintf("%s/api/infrastructure-monitoring/snapshots?query=entity.application.id:%s&size=20000", s.BaseUrl, applicationPerspectiveId)
+
+	responseBody, response, err := s.do(url, "GET", nil)
+	if err != nil {
+		log.Error().Err(err).Msgf("Failed to get snapshot-ids from Instana. Full response %+v", string(responseBody))
+		return nil, err
+	}
+
+	if response.StatusCode != 200 {
+		log.Error().Int("code", response.StatusCode).Err(err).Msgf("Unexpected response %+v", string(responseBody))
+		return nil, errors.New("unexpected response code")
+	}
+
+	var result types.SnapshotSearchResponse
+	if responseBody != nil {
+		err = json.Unmarshal(responseBody, &result)
+		if err != nil {
+			log.Error().Err(err).Str("body", string(responseBody)).Msgf("Failed to parse body")
+			return nil, err
+		} else {
+			var snapshotIds []string
+			for _, snapshot := range result.Items {
+				snapshotIds = append(snapshotIds, snapshot.SnapshotId)
+			}
+			return snapshotIds, nil
+		}
+	} else {
+		log.Error().Err(err).Msgf("Empty response body")
+		return nil, errors.New("empty response body")
+	}
+}
 
 func (s *Specification) GetEvents(_ context.Context, from time.Time, to time.Time, eventTypeFilters []string) ([]types.Event, error) {
 	url := fmt.Sprintf("%s/api/events?excludeTriggeredBefore=true&from=%d&to=%d", s.BaseUrl, from.UnixMilli(), to.UnixMilli())
@@ -68,12 +100,12 @@ func (s *Specification) GetEvents(_ context.Context, from time.Time, to time.Tim
 	return result, err
 }
 
-func (s *Specification) GetApplicationPerspectives(_ context.Context, page int, pageSize int) ([]types.ApplicationPerspective, error) {
+func (s *Specification) GetApplicationPerspectives(_ context.Context, page int, pageSize int) (*types.ApplicationPerspectiveResponse, error) {
 	url := fmt.Sprintf("%s/api/application-monitoring/applications?page=%d&pageSize=%d", s.BaseUrl, page, pageSize)
 
 	responseBody, response, err := s.do(url, "GET", nil)
 	if err != nil {
-		log.Error().Err(err).Msgf("Failed to get application perspectives from Instana. Full response %+v", string(responseBody))
+		log.Error().Int("page", page).Int("pageSize", pageSize).Err(err).Msgf("Failed to get application perspectives from Instana. Full response %+v", string(responseBody))
 		return nil, err
 	}
 
@@ -89,9 +121,11 @@ func (s *Specification) GetApplicationPerspectives(_ context.Context, page int, 
 			log.Error().Int("page", page).Int("pageSize", pageSize).Err(err).Str("body", string(responseBody)).Msgf("Failed to parse body")
 			return nil, err
 		}
+		return &result, err
+	} else {
+		log.Error().Int("page", page).Int("pageSize", pageSize).Err(err).Msgf("Empty response body")
+		return nil, errors.New("empty response body")
 	}
-
-	return result.Items, err
 }
 
 func (s *Specification) CreateMaintenanceWindow(_ context.Context, maintenanceWindow types.CreateMaintenanceWindowRequest) (*string, *http.Response, error) {

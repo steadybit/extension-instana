@@ -24,6 +24,9 @@ func createMockInstanaServer() *httptest.Server {
 			if strings.HasPrefix(r.URL.Path, "/api/events") && r.Method == http.MethodGet {
 				w.WriteHeader(http.StatusOK)
 				_, _ = w.Write(events())
+			} else if strings.HasPrefix(r.URL.Path, "/api/infrastructure-monitoring/snapshots") && r.Method == http.MethodGet {
+				w.WriteHeader(http.StatusOK)
+				_, _ = w.Write(snapshots())
 			} else if strings.HasPrefix(r.URL.Path, "/api/settings/v2/maintenance") && r.Method == http.MethodPut {
 				w.WriteHeader(http.StatusOK)
 				_, _ = w.Write(maintenanceWindowCreated())
@@ -37,6 +40,23 @@ func createMockInstanaServer() *httptest.Server {
 	server.Start()
 	log.Info().Str("url", server.URL).Msg("Started Mock-Server")
 	return &server
+}
+func snapshots() []byte {
+	return []byte(`{
+    "items": [
+        {
+            "snapshotId": "snapshot-id-4711",
+            "plugin": "kubernetesDeployment",
+            "from": 1703284764000,
+            "to": null,
+            "tags": [
+                "app.kubernetes.io/managed-by=Helm"
+            ],
+            "label": "test/test",
+            "host": ""
+        }
+    ]
+}`)
 }
 
 func events() []byte {
@@ -54,9 +74,9 @@ func events() []byte {
         "entityLabel": "Unknown",
         "entityType": "INFRASTRUCTURE",
         "fixSuggestion": "JVM on Host ip-10-10-81-117.eu-central-1.compute.internal",
-        "snapshotId": "-QEDb2D3jtvz7vYJOMYcxTSEyXQ"
+        "snapshotId": "snapshot-id-4711"
     }
-]`)
+  ]`)
 }
 
 func maintenanceWindowCreated() []byte {

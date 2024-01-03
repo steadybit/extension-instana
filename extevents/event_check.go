@@ -10,6 +10,7 @@ import (
 	"github.com/steadybit/action-kit/go/action_kit_api/v2"
 	"github.com/steadybit/action-kit/go/action_kit_sdk"
 	"github.com/steadybit/extension-instana/config"
+	"github.com/steadybit/extension-instana/extapplications"
 	"github.com/steadybit/extension-instana/types"
 	extension_kit "github.com/steadybit/extension-kit"
 	"github.com/steadybit/extension-kit/extbuild"
@@ -34,6 +35,7 @@ type EventCheckState struct {
 	Condition             string
 	ConditionCheckMode    string
 	ConditionCheckSuccess bool
+	SnapshotIds           map[string]bool
 }
 
 func NewEventCheckAction() action_kit_sdk.Action[EventCheckState] {
@@ -51,6 +53,16 @@ func (m *EventCheckAction) Describe() action_kit_api.ActionDescription {
 		Description: "Checks for the existence of certain events in Instana.",
 		Version:     extbuild.GetSemverVersionStringOrUnknown(),
 		Icon:        extutil.Ptr(eventCheckActionIcon),
+		TargetSelection: extutil.Ptr(action_kit_api.TargetSelection{
+			TargetType:          extapplications.ApplicationPerspectiveTargetId,
+			QuantityRestriction: extutil.Ptr(action_kit_api.All),
+			SelectionTemplates: extutil.Ptr([]action_kit_api.TargetSelectionTemplate{
+				{
+					Label: "by application perspective label",
+					Query: "instana.application.label=\"\"",
+				},
+			}),
+		}),
 		Category:    extutil.Ptr("monitoring"),
 		Kind:        action_kit_api.Check,
 		TimeControl: action_kit_api.TimeControlInternal,
@@ -170,7 +182,7 @@ func (m *EventCheckAction) Describe() action_kit_api.ActionDescription {
 	}
 }
 
-func (m *EventCheckAction) Prepare(_ context.Context, state *EventCheckState, request action_kit_api.PrepareActionRequestBody) (*action_kit_api.PrepareResult, error) {
+func (m *EventCheckAction) Prepare(ctx context.Context, state *EventCheckState, request action_kit_api.PrepareActionRequestBody) (*action_kit_api.PrepareResult, error) {
 	duration := request.Config["duration"].(float64)
 	state.Start = time.Now()
 	state.LastFetch = state.Start
@@ -200,6 +212,17 @@ func (m *EventCheckAction) Prepare(_ context.Context, state *EventCheckState, re
 		state.ConditionCheckMode = fmt.Sprintf("%v", request.Config["conditionCheckMode"])
 	}
 
+	applicationPerspectiveId := request.Target.Attributes["instana.application.id"][0]
+	snapshotIds, err := config.Config.GetSnapshotIds(ctx, applicationPerspectiveId)
+	if err != nil {
+		return nil, extension_kit.ToError("Failed to get snapshot-ids from Instana.", err)
+	}
+	state.SnapshotIds = make(map[string]bool)
+	for _, snapshotId := range snapshotIds {
+		state.SnapshotIds[snapshotId] = true
+	}
+	log.Debug().Int("count", len(state.SnapshotIds)).Msg("Initialized snapshot ids.")
+
 	return nil, nil
 }
 
@@ -223,6 +246,7 @@ func (m *EventCheckAction) Status(ctx context.Context, state *EventCheckState) (
 
 type EventsApi interface {
 	GetEvents(ctx context.Context, from time.Time, to time.Time, eventTypeFilters []string) ([]types.Event, error)
+	GetSnapshotIds(ctx context.Context, applicationPerspectiveId string) ([]string, error)
 }
 
 func EventCheckStatus(ctx context.Context, state *EventCheckState, api EventsApi) (*action_kit_api.StatusResult, error) {
@@ -235,7 +259,8 @@ func EventCheckStatus(ctx context.Context, state *EventCheckState, api EventsApi
 
 	filteredEvents := make([]types.Event, 0)
 	for _, event := range events {
-		if event.Severity >= state.EventSeverityFilter {
+		_, snapshotIdMatchesFilter := state.SnapshotIds[event.SnapshotId]
+		if event.Severity >= state.EventSeverityFilter && snapshotIdMatchesFilter {
 			filteredEvents = append(filteredEvents, event)
 		}
 	}
@@ -302,7 +327,9 @@ func eventsToMessages(events []types.Event) *action_kit_api.Messages {
 			}),
 		})
 	}
-	log.Debug().Int("count", len(messages)).Msg("Found events, send to platform.")
+	if (len(messages)) != 0 {
+		log.Debug().Int("count", len(messages)).Msg("Found events, send to platform.")
+	}
 	return extutil.Ptr(messages)
 }
 
