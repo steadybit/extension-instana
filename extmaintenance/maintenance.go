@@ -114,7 +114,7 @@ func CreateMaintenanceWindow(ctx context.Context, state *CreateMaintenanceWindow
 	createRequest := types.CreateMaintenanceWindowRequest{
 		Id:    id,
 		Name:  name,
-		Query: fmt.Sprintf("application.id:\"%s\"", state.ApplicationPerspectiveId),
+		Query: fmt.Sprintf("entity.application.id:\"%s\"", state.ApplicationPerspectiveId),
 		Scheduling: types.Schedule{
 			Duration: types.Duration{
 				Amount: amount,
