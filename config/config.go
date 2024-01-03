@@ -95,9 +95,7 @@ func (s *Specification) GetApplicationPerspectives(_ context.Context, page int, 
 }
 
 func (s *Specification) CreateMaintenanceWindow(_ context.Context, maintenanceWindow types.CreateMaintenanceWindowRequest) (*string, *http.Response, error) {
-	objects := []types.CreateMaintenanceWindowRequest{maintenanceWindow}
-
-	b, err := json.Marshal(objects)
+	b, err := json.Marshal(maintenanceWindow)
 	if err != nil {
 		log.Error().Err(err).Msgf("Failed to marshal request")
 		return nil, nil, err

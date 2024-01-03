@@ -127,7 +127,7 @@ func CreateMaintenanceWindow(ctx context.Context, state *CreateMaintenanceWindow
 
 	windowId, _, err := api.CreateMaintenanceWindow(ctx, createRequest)
 	if err != nil {
-		return nil, extension_kit.ToError("Failed to create maintenance windows.", err)
+		return nil, extension_kit.ToError("Failed to create maintenance window.", err)
 	}
 
 	state.MaintenanceWindowId = windowId
