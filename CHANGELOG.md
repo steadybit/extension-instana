@@ -1,6 +1,6 @@
 # Changelog
 
-## v1.1.0 (Next Release)
+## v1.1.0
 
  - Added a discovery for application perspectives
  - Added an action to create a maintenance window
