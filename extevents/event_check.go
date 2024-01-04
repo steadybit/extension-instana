@@ -322,14 +322,14 @@ func EventCheckStatus(ctx context.Context, state *EventCheckState, api EventsApi
 func eventsToMetrics(events []types.Event, now time.Time) *action_kit_api.Metrics {
 	var metrics []action_kit_api.Metric
 	for _, event := range events {
-		tooltip := fmt.Sprintf("Event Type: %s\nEvent Severity: %d\nEntity Name: %s\nEntity Label: %s\nEntity Type: %s", event.Type, event.Severity, event.EntityName, event.EntityLabel, event.EntityType)
+		tooltip := fmt.Sprintf("Event Problem: %s\nEvent Detail: %s\nEvent Type: %s\nEvent Severity: %d\nEntity Name: %s\nEntity Label: %s\nEntity Type: %s", event.Problem, event.Detail, event.Type, event.Severity, event.EntityName, event.EntityLabel, event.EntityType)
 		metrics = append(metrics,
 			action_kit_api.Metric{
 				Name: extutil.Ptr("instana_events"),
 				Metric: map[string]string{
 					"id":      event.EventId,
 					"title":   event.Problem + " - " + event.Detail,
-					"state":   "danger",
+					"state":   getState(event.Severity),
 					"tooltip": tooltip,
 					"url":     fmt.Sprintf("%s/#/events;eventId=%s", config.Config.BaseUrl, event.EventId),
 				},
@@ -339,4 +339,15 @@ func eventsToMetrics(events []types.Event, now time.Time) *action_kit_api.Metric
 		)
 	}
 	return extutil.Ptr(metrics)
+}
+
+func getState(severity int) string {
+	if severity == -1 {
+		return "info"
+	} else if severity == 5 {
+		return "warn"
+	} else if severity == 10 {
+		return "danger"
+	}
+	return "danger"
 }
