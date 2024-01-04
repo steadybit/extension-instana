@@ -72,7 +72,7 @@ func (s *Specification) GetSnapshotIds(_ context.Context, applicationPerspective
 }
 
 func (s *Specification) GetEvents(_ context.Context, from time.Time, to time.Time, eventTypeFilters []string) ([]types.Event, error) {
-	url := fmt.Sprintf("%s/api/events?excludeTriggeredBefore=true&from=%d&to=%d", s.BaseUrl, from.UnixMilli(), to.UnixMilli())
+	url := fmt.Sprintf("%s/api/events?from=%d&to=%d", s.BaseUrl, from.UnixMilli(), to.UnixMilli())
 	for _, eventTypeFilter := range eventTypeFilters {
 		url = fmt.Sprintf("%s&eventTypeFilters=%s", url, eventTypeFilter)
 	}

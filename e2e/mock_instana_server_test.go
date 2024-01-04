@@ -62,18 +62,19 @@ func snapshots() []byte {
 func events() []byte {
 	return []byte(`[
     {
-        "eventId": "95wKHid1Qh2o8tBjGB0wcA",
-        "start": 1703677881000,
-        "end": 1703677881000,
-        "type": "change",
-        "state": "closed",
-        "problem": "offline",
-        "detail": "JVM on Host ip-10-10-81-117.eu-central-1.compute.internal",
-        "severity": -1,
-        "entityName": "JVM",
-        "entityLabel": "Unknown",
+        "eventId": "XoDkHMssTRGiyEpPz337hQ",
+        "start": 1703075293000,
+        "end": 1703075923000,
+        "type": "issue",
+        "state": "open",
+        "problem": "Condition [Ready]: Pod containers are not ready",
+        "detail": "containers with unready status: [platform platform-port-splitter]",
+        "severity": 10,
+        "entityName": "Kubernetes Pod",
+        "entityLabel": "platform/platform-d94f66f69-r72lf (pod)",
+        "metrics": [],
         "entityType": "INFRASTRUCTURE",
-        "fixSuggestion": "JVM on Host ip-10-10-81-117.eu-central-1.compute.internal",
+        "fixSuggestion": "containers with unready status: [platform platform-port-splitter]",
         "snapshotId": "snapshot-id-4711"
     }
   ]`)

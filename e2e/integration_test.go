@@ -86,19 +86,17 @@ func testEventCheck(t *testing.T, m *e2e.Minikube, e *e2e.Extension) {
 	require.NoError(t, err)
 
 	assert.Eventually(t, func() bool {
-		messages := action.Messages()
-		if messages == nil {
+		metrics := action.Metrics()
+		if metrics == nil {
 			return false
 		}
-		return len(messages) > 0
+		return len(metrics) > 0
 	}, 5*time.Second, 500*time.Millisecond)
-	messages := action.Messages()
+	metrics := action.Metrics()
 
-	assert.Len(t, messages, 1)
-	for _, message := range messages {
-		assert.Equal(t, "INSTANA", *message.Type)
-		assert.Equal(t, action_kit_api.Info, *message.Level)
-		assert.Equal(t, "offline - JVM on Host ip-10-10-81-117.eu-central-1.compute.internal", message.Message)
+	for _, metric := range metrics {
+		assert.Equal(t, "XoDkHMssTRGiyEpPz337hQ", metric.Metric["id"])
+		assert.Equal(t, "Condition [Ready]: Pod containers are not ready - containers with unready status: [platform platform-port-splitter]", metric.Metric["title"])
 	}
 }
 

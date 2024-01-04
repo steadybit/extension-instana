@@ -28,7 +28,6 @@ var (
 
 type EventCheckState struct {
 	Start                 time.Time
-	LastFetch             time.Time
 	End                   time.Time
 	EventSeverityFilter   int
 	EventTypeFilters      []string
@@ -159,19 +158,32 @@ func (m *EventCheckAction) Describe() action_kit_api.ActionDescription {
 						Label: "Issue",
 						Value: "ISSUE",
 					},
-					action_kit_api.ExplicitParameterOption{
-						Label: "Change",
-						Value: "CHANGE",
-					},
 				}),
 				DefaultValue: extutil.Ptr("[\"INCIDENT\",\"ISSUE\"]"),
 			},
 		},
 		Widgets: extutil.Ptr([]action_kit_api.Widget{
-			action_kit_api.LogWidget{
-				Type:    action_kit_api.ComSteadybitWidgetLog,
-				Title:   "Instana Events",
-				LogType: logType,
+			action_kit_api.StateOverTimeWidget{
+				Type:  action_kit_api.ComSteadybitWidgetStateOverTime,
+				Title: "Instana events",
+				Identity: action_kit_api.StateOverTimeWidgetIdentityConfig{
+					From: "id",
+				},
+				Label: action_kit_api.StateOverTimeWidgetLabelConfig{
+					From: "title",
+				},
+				State: action_kit_api.StateOverTimeWidgetStateConfig{
+					From: "state",
+				},
+				Tooltip: action_kit_api.StateOverTimeWidgetTooltipConfig{
+					From: "tooltip",
+				},
+				Url: extutil.Ptr(action_kit_api.StateOverTimeWidgetUrlConfig{
+					From: extutil.Ptr("url"),
+				}),
+				Value: extutil.Ptr(action_kit_api.StateOverTimeWidgetValueConfig{
+					Hide: extutil.Ptr(true),
+				}),
 			},
 		}),
 		Prepare: action_kit_api.MutatingEndpointReference{},
@@ -185,7 +197,6 @@ func (m *EventCheckAction) Describe() action_kit_api.ActionDescription {
 func (m *EventCheckAction) Prepare(ctx context.Context, state *EventCheckState, request action_kit_api.PrepareActionRequestBody) (*action_kit_api.PrepareResult, error) {
 	duration := request.Config["duration"].(float64)
 	state.Start = time.Now()
-	state.LastFetch = state.Start
 	state.End = time.Now().Add(time.Millisecond * time.Duration(duration))
 
 	if request.Config["eventSeverityFilter"] != nil {
@@ -251,8 +262,7 @@ type EventsApi interface {
 
 func EventCheckStatus(ctx context.Context, state *EventCheckState, api EventsApi) (*action_kit_api.StatusResult, error) {
 	now := time.Now()
-	events, err := api.GetEvents(ctx, state.LastFetch, now, state.EventTypeFilters)
-	state.LastFetch = now
+	events, err := api.GetEvents(ctx, state.Start, now, state.EventTypeFilters)
 	if err != nil {
 		return nil, extension_kit.ToError("Failed to get events from Instana.", err)
 	}
@@ -260,7 +270,7 @@ func EventCheckStatus(ctx context.Context, state *EventCheckState, api EventsApi
 	filteredEvents := make([]types.Event, 0)
 	for _, event := range events {
 		_, snapshotIdMatchesFilter := state.SnapshotIds[event.SnapshotId]
-		if event.Severity >= state.EventSeverityFilter && snapshotIdMatchesFilter {
+		if event.Severity >= state.EventSeverityFilter && snapshotIdMatchesFilter && event.State != "closed" {
 			filteredEvents = append(filteredEvents, event)
 		}
 	}
@@ -306,40 +316,27 @@ func EventCheckStatus(ctx context.Context, state *EventCheckState, api EventsApi
 	return &action_kit_api.StatusResult{
 		Completed: completed,
 		Error:     checkError,
-		Messages:  eventsToMessages(filteredEvents),
+		Metrics:   eventsToMetrics(filteredEvents, now),
 	}, nil
 }
-
-func eventsToMessages(events []types.Event) *action_kit_api.Messages {
-	var messages []action_kit_api.Message
+func eventsToMetrics(events []types.Event, now time.Time) *action_kit_api.Metrics {
+	var metrics []action_kit_api.Metric
 	for _, event := range events {
-		messages = append(messages, action_kit_api.Message{
-			Message:         event.Problem + " - " + event.Detail,
-			Type:            extutil.Ptr(logType),
-			Level:           convertToLevel(event.Severity),
-			Timestamp:       extutil.Ptr(time.UnixMilli(event.Start)),
-			TimestampSource: extutil.Ptr(action_kit_api.TimestampSourceExternal),
-			Fields: extutil.Ptr(action_kit_api.MessageFields{
-				"Type":         event.Type,
-				"Entity name":  event.EntityName,
-				"Entity label": event.EntityLabel,
-				"Entity type":  event.EntityType,
-			}),
-		})
+		tooltip := fmt.Sprintf("Event Type: %s\nEvent Severity: %d\nEntity Name: %s\nEntity Label: %s\nEntity Type: %s", event.Type, event.Severity, event.EntityName, event.EntityLabel, event.EntityType)
+		metrics = append(metrics,
+			action_kit_api.Metric{
+				Name: extutil.Ptr("instana_events"),
+				Metric: map[string]string{
+					"id":      event.EventId,
+					"title":   event.Problem + " - " + event.Detail,
+					"state":   "danger",
+					"tooltip": tooltip,
+					"url":     fmt.Sprintf("%s/#/events;eventId=%s", config.Config.BaseUrl, event.EventId),
+				},
+				Timestamp: now,
+				Value:     0,
+			},
+		)
 	}
-	if (len(messages)) != 0 {
-		log.Debug().Int("count", len(messages)).Msg("Found events, send to platform.")
-	}
-	return extutil.Ptr(messages)
-}
-
-func convertToLevel(severity int) *action_kit_api.MessageLevel {
-	if severity == -1 {
-		return extutil.Ptr(action_kit_api.Info)
-	} else if severity == 5 {
-		return extutil.Ptr(action_kit_api.Warn)
-	} else if severity == 10 {
-		return extutil.Ptr(action_kit_api.Error)
-	}
-	return nil
+	return extutil.Ptr(metrics)
 }
