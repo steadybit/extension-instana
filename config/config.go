@@ -59,7 +59,10 @@ func (s *Specification) GetSnapshotIds(_ context.Context, applicationPerspective
 			log.Error().Err(err).Str("body", string(responseBody)).Msgf("Failed to parse body")
 			return nil, err
 		} else {
-			var snapshotIds []string
+			if len(result.Items) == 20000 {
+				log.Warn().Msgf("There are more than 20000 snapshots for application perspective %s. Only the first 20000 will be considered. You might miss events.", applicationPerspectiveId)
+			}
+			snapshotIds := make([]string, 0, len(result.Items))
 			for _, snapshot := range result.Items {
 				snapshotIds = append(snapshotIds, snapshot.SnapshotId)
 			}
