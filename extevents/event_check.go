@@ -165,7 +165,7 @@ func (m *EventCheckAction) Describe() action_kit_api.ActionDescription {
 		Widgets: extutil.Ptr([]action_kit_api.Widget{
 			action_kit_api.StateOverTimeWidget{
 				Type:  action_kit_api.ComSteadybitWidgetStateOverTime,
-				Title: "Instana events",
+				Title: "Instana Events",
 				Identity: action_kit_api.StateOverTimeWidgetIdentityConfig{
 					From: "id",
 				},
