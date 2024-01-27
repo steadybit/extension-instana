@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.1.1
+
+ - update depencenies
+
 ## v1.1.0
 
  - Added a discovery for application perspectives
