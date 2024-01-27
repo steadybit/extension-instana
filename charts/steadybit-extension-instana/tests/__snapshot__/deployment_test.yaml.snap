@@ -39,8 +39,8 @@ manifest should match snapshot using podAnnotations and Labels:
                       name: steadybit-extension-instana
                 - name: STEADYBIT_EXTENSION_BASE_URL
                   value: null
-              image: ghcr.io/steadybit/extension-instana:latest
-              imagePullPolicy: Always
+              image: ghcr.io/steadybit/extension-instana:v0.0.0
+              imagePullPolicy: IfNotPresent
               livenessProbe:
                 failureThreshold: 5
                 httpGet:
@@ -122,8 +122,8 @@ manifest should match snapshot with TLS:
                       name: steadybit-extension-instana
                 - name: STEADYBIT_EXTENSION_BASE_URL
                   value: null
-              image: ghcr.io/steadybit/extension-instana:latest
-              imagePullPolicy: Always
+              image: ghcr.io/steadybit/extension-instana:v0.0.0
+              imagePullPolicy: IfNotPresent
               livenessProbe:
                 failureThreshold: 5
                 httpGet:
@@ -215,8 +215,8 @@ manifest should match snapshot with extra env vars:
                   name: env-configmap
                 - name: env-secrets
                   secretRef: null
-              image: ghcr.io/steadybit/extension-instana:latest
-              imagePullPolicy: Always
+              image: ghcr.io/steadybit/extension-instana:v0.0.0
+              imagePullPolicy: IfNotPresent
               livenessProbe:
                 failureThreshold: 5
                 httpGet:
@@ -296,8 +296,8 @@ manifest should match snapshot with extra labels:
                       name: steadybit-extension-instana
                 - name: STEADYBIT_EXTENSION_BASE_URL
                   value: null
-              image: ghcr.io/steadybit/extension-instana:latest
-              imagePullPolicy: Always
+              image: ghcr.io/steadybit/extension-instana:v0.0.0
+              imagePullPolicy: IfNotPresent
               livenessProbe:
                 failureThreshold: 5
                 httpGet:
@@ -381,8 +381,8 @@ manifest should match snapshot with mutual TLS:
                       name: steadybit-extension-instana
                 - name: STEADYBIT_EXTENSION_BASE_URL
                   value: null
-              image: ghcr.io/steadybit/extension-instana:latest
-              imagePullPolicy: Always
+              image: ghcr.io/steadybit/extension-instana:v0.0.0
+              imagePullPolicy: IfNotPresent
               livenessProbe:
                 failureThreshold: 5
                 httpGet:
@@ -480,8 +480,8 @@ manifest should match snapshot with mutual TLS using containerPaths:
                       name: steadybit-extension-instana
                 - name: STEADYBIT_EXTENSION_BASE_URL
                   value: null
-              image: ghcr.io/steadybit/extension-instana:latest
-              imagePullPolicy: Always
+              image: ghcr.io/steadybit/extension-instana:v0.0.0
+              imagePullPolicy: IfNotPresent
               livenessProbe:
                 failureThreshold: 5
                 httpGet:
@@ -559,8 +559,8 @@ manifest should match snapshot with podSecurityContext:
                       name: steadybit-extension-instana
                 - name: STEADYBIT_EXTENSION_BASE_URL
                   value: null
-              image: ghcr.io/steadybit/extension-instana:latest
-              imagePullPolicy: Always
+              image: ghcr.io/steadybit/extension-instana:v0.0.0
+              imagePullPolicy: IfNotPresent
               livenessProbe:
                 failureThreshold: 5
                 httpGet:
@@ -640,8 +640,8 @@ manifest should match snapshot with priority class:
                       name: steadybit-extension-instana
                 - name: STEADYBIT_EXTENSION_BASE_URL
                   value: null
-              image: ghcr.io/steadybit/extension-instana:latest
-              imagePullPolicy: Always
+              image: ghcr.io/steadybit/extension-instana:v0.0.0
+              imagePullPolicy: IfNotPresent
               livenessProbe:
                 failureThreshold: 5
                 httpGet:
@@ -720,8 +720,8 @@ manifest should match snapshot without TLS:
                       name: steadybit-extension-instana
                 - name: STEADYBIT_EXTENSION_BASE_URL
                   value: null
-              image: ghcr.io/steadybit/extension-instana:latest
-              imagePullPolicy: Always
+              image: ghcr.io/steadybit/extension-instana:v0.0.0
+              imagePullPolicy: IfNotPresent
               livenessProbe:
                 failureThreshold: 5
                 httpGet:
