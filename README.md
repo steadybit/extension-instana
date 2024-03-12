@@ -13,8 +13,9 @@ Learn about the capabilities of this extension in our [Reliability Hub](https://
 | `STEADYBIT_EXTENSION_BASE_URL`  |            | The Instana Base Url, like `https://$UNIT-$TENANT.instana.io`                                                                                         | yes      |         |
 | `STEADYBIT_EXTENSION_API_TOKEN` |            | The Instana [API Token](https://www.ibm.com/docs/en/instana-observability/current?topic=apis-web-rest-api#tokens), see the required permissions below | yes      |         |
 
-The extension supports all environment variables provided
-by [steadybit/extension-kit](https://github.com/steadybit/extension-kit#environment-variables).
+The extension supports all environment variables provided by [steadybit/extension-kit](https://github.com/steadybit/extension-kit#environment-variables).
+
+When installed as linux package this configuration is done in the file `/etc/steadybit/extension-instana`.
 
 ## Permissions
 
