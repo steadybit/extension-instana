@@ -22,9 +22,9 @@ require (
 	github.com/emicklei/go-restful/v3 v3.11.0 // indirect
 	github.com/getkin/kin-openapi v0.123.0 // indirect
 	github.com/go-logr/logr v1.3.0 // indirect
-	github.com/go-openapi/jsonpointer v0.20.3 // indirect
+	github.com/go-openapi/jsonpointer v0.21.0 // indirect
 	github.com/go-openapi/jsonreference v0.20.2 // indirect
-	github.com/go-openapi/swag v0.22.10 // indirect
+	github.com/go-openapi/swag v0.23.0 // indirect
 	github.com/go-resty/resty/v2 v2.11.0 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
