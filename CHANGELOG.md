@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.1.3
+
+ - update depencenies
+
+## v1.1.2
+
+ - update depencenies
+
 ## v1.1.1
 
  - update depencenies
