@@ -44,7 +44,7 @@ helm upgrade steadybit-extension-instana \
     --wait \
     --timeout 5m0s \
     --create-namespace \
-    --namespace steadybit-extension \
+    --namespace steadybit-agent \
     steadybit-extension-instana/steadybit-extension-instana
 ```
 
