@@ -32,8 +32,7 @@ func NewApplicationPerspectiveDiscovery() discovery_kit_sdk.TargetDiscovery {
 }
 func (d *applicationPerspectiveDiscovery) Describe() discovery_kit_api.DiscoveryDescription {
 	return discovery_kit_api.DiscoveryDescription{
-		Id:         ApplicationPerspectiveTargetId,
-		RestrictTo: extutil.Ptr(discovery_kit_api.LEADER),
+		Id: ApplicationPerspectiveTargetId,
 		Discover: discovery_kit_api.DescribingEndpointReferenceWithCallInterval{
 			CallInterval: extutil.Ptr("1m"),
 		},
