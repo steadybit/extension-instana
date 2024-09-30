@@ -59,7 +59,7 @@ func (m *CreateMaintenanceWindowAction) Describe() action_kit_api.ActionDescript
 				},
 			}),
 		}),
-		Category:    extutil.Ptr("monitoring"),
+		Technology:  extutil.Ptr("Instana"),
 		Kind:        action_kit_api.Other,
 		TimeControl: action_kit_api.TimeControlExternal,
 		Parameters: []action_kit_api.ActionParameter{
