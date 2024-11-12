@@ -37,7 +37,7 @@ func main() {
 	action_kit_sdk.RegisterAction(extmaintenance.NewCreateMaintenanceWindowAction())
 	//extevents.RegisterEventListenerHandlers()
 
-	action_kit_sdk.InstallSignalHandler()
+	extsignals.ActivateSignalHandlers()
 	action_kit_sdk.RegisterCoverageEndpoints()
 	exthealth.SetReady(true)
 
