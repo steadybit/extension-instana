@@ -57,7 +57,7 @@ func (m *EventCheckAction) Describe() action_kit_api.ActionDescription {
 			QuantityRestriction: extutil.Ptr(action_kit_api.All),
 			SelectionTemplates: extutil.Ptr([]action_kit_api.TargetSelectionTemplate{
 				{
-					Label: "by application perspective label",
+					Label: "application perspective label",
 					Query: "instana.application.label=\"\"",
 				},
 			}),
