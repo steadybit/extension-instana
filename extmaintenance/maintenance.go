@@ -51,7 +51,7 @@ func (m *CreateMaintenanceWindowAction) Describe() action_kit_api.ActionDescript
 		Icon:        extutil.Ptr(maintenanceWindowActionIcon),
 		TargetSelection: extutil.Ptr(action_kit_api.TargetSelection{
 			TargetType:          extapplications.ApplicationPerspectiveTargetId,
-			QuantityRestriction: extutil.Ptr(action_kit_api.All),
+			QuantityRestriction: extutil.Ptr(action_kit_api.QuantityRestrictionAll),
 			SelectionTemplates: extutil.Ptr([]action_kit_api.TargetSelectionTemplate{
 				{
 					Label: "application perspective label",
@@ -67,7 +67,7 @@ func (m *CreateMaintenanceWindowAction) Describe() action_kit_api.ActionDescript
 				Name:         "duration",
 				Label:        "Duration",
 				Description:  extutil.Ptr(""),
-				Type:         action_kit_api.Duration,
+				Type:         action_kit_api.ActionParameterTypeDuration,
 				DefaultValue: extutil.Ptr("30s"),
 				Order:        extutil.Ptr(1),
 				Required:     extutil.Ptr(true),

@@ -54,7 +54,7 @@ func (m *EventCheckAction) Describe() action_kit_api.ActionDescription {
 		Icon:        extutil.Ptr(eventCheckActionIcon),
 		TargetSelection: extutil.Ptr(action_kit_api.TargetSelection{
 			TargetType:          extapplications.ApplicationPerspectiveTargetId,
-			QuantityRestriction: extutil.Ptr(action_kit_api.All),
+			QuantityRestriction: extutil.Ptr(action_kit_api.QuantityRestrictionAll),
 			SelectionTemplates: extutil.Ptr([]action_kit_api.TargetSelectionTemplate{
 				{
 					Label: "application perspective label",
@@ -70,7 +70,7 @@ func (m *EventCheckAction) Describe() action_kit_api.ActionDescription {
 				Name:         "duration",
 				Label:        "Duration",
 				Description:  extutil.Ptr(""),
-				Type:         action_kit_api.Duration,
+				Type:         action_kit_api.ActionParameterTypeDuration,
 				DefaultValue: extutil.Ptr("30s"),
 				Order:        extutil.Ptr(1),
 				Required:     extutil.Ptr(true),
@@ -79,7 +79,7 @@ func (m *EventCheckAction) Describe() action_kit_api.ActionDescription {
 				Name:        "condition",
 				Label:       "Condition",
 				Description: extutil.Ptr(""),
-				Type:        action_kit_api.String,
+				Type:        action_kit_api.ActionParameterTypeString,
 				Options: extutil.Ptr([]action_kit_api.ParameterOption{
 					action_kit_api.ExplicitParameterOption{
 						Label: "No check, only show events",
@@ -102,7 +102,7 @@ func (m *EventCheckAction) Describe() action_kit_api.ActionDescription {
 				Name:         "conditionCheckMode",
 				Label:        "Condition Check Mode",
 				Description:  extutil.Ptr("Should the step succeed if the condition is met at least once or all the time?"),
-				Type:         action_kit_api.String,
+				Type:         action_kit_api.ActionParameterTypeString,
 				DefaultValue: extutil.Ptr(conditionCheckModeAllTheTime),
 				Options: extutil.Ptr([]action_kit_api.ParameterOption{
 					action_kit_api.ExplicitParameterOption{
@@ -121,7 +121,7 @@ func (m *EventCheckAction) Describe() action_kit_api.ActionDescription {
 				Name:        "eventSeverityFilter", //-1 = INFO, 5 = WARN, 10 = CRITICAL
 				Label:       "Event Severity Filter",
 				Description: extutil.Ptr("Filter Problems by minimum severity."),
-				Type:        action_kit_api.String,
+				Type:        action_kit_api.ActionParameterTypeString,
 				Order:       extutil.Ptr(4),
 				Required:    extutil.Ptr(true),
 				Advanced:    extutil.Ptr(true),
@@ -145,7 +145,7 @@ func (m *EventCheckAction) Describe() action_kit_api.ActionDescription {
 				Name:        "eventTypeFilters",
 				Label:       "Event Type Filter",
 				Description: extutil.Ptr("Filter Problems by an event type."),
-				Type:        action_kit_api.StringArray,
+				Type:        action_kit_api.ActionParameterTypeStringArray,
 				Order:       extutil.Ptr(5),
 				Required:    extutil.Ptr(true),
 				Advanced:    extutil.Ptr(true),
