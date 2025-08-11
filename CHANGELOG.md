@@ -1,8 +1,9 @@
 # Changelog
 
-## v1.1.7 (next)
+## v1.1.7
 
 - Updated dependencies
+- add insecureSkipVerify option
 
 ##  v1.1.6
 

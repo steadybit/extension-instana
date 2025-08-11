@@ -80,9 +80,47 @@ Make sure that the extension is registered with the agent. In most cases this is
 the [documentation](https://docs.steadybit.com/install-and-configure/install-agent/extension-registration) for more
 information about extension registration and how to verify.
 
+## Importing your own certificates
+
+You may want to import your own certificates for connecting to Jenkins instances with self-signed certificates. This can be done in two ways:
+
+### Option 1: Using InsecureSkipVerify
+
+The extension provides the `insecureSkipVerify` option which disables TLS certificate verification. This is suitable for testing but not recommended for production environments.
+
+```yaml
+instana:
+  insecureSkipVerify: true
+```
+
+### Option 2: Mounting custom certificates
+
+Mount a volume with your custom certificates and reference it in `extraVolumeMounts` and `extraVolumes` in the helm chart.
+
+This example uses a config map to store the `*.crt`-files:
+
+```shell
+kubectl create configmap -n steadybit-agent instana-self-signed-ca --from-file=./self-signed-ca.crt
+```
+
+```yaml
+extraVolumeMounts:
+  - name: extra-certs
+    mountPath: /etc/ssl/extra-certs
+    readOnly: true
+extraVolumes:
+  - name: extra-certs
+    configMap:
+      name: instana-self-signed-ca
+extraEnv:
+  - name: SSL_CERT_DIR
+    value: /etc/ssl/extra-certs:/etc/ssl/certs
+```
+
 ## Version and Revision
 
 The version and revision of the extension:
 - are printed during the startup of the extension
 - are added as a Docker label to the image
 - are available via the `version.txt`/`revision.txt` files in the root of the image
+

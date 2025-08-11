@@ -66,12 +66,17 @@ spec:
                   key: api-token
             - name: STEADYBIT_EXTENSION_BASE_URL
               value: {{ .Values.instana.baseUrl }}
+            - name: STEADYBIT_EXTENSION_INSECURE_SKIP_VERIFY
+              value: "{{ .Values.instana.insecureSkipVerify }}"
           {{- with .Values.extraEnvFrom }}
           envFrom:
             {{- toYaml . | nindent 12 }}
           {{- end }}
           volumeMounts:
             {{- include "extensionlib.deployment.volumeMounts" (list .) | nindent 12 }}
+            {{- with .Values.extraVolumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
           livenessProbe:
             initialDelaySeconds: {{ .Values.probes.liveness.initialDelaySeconds }}
             periodSeconds: {{ .Values.probes.liveness.periodSeconds }}
@@ -96,6 +101,9 @@ spec:
           {{- end }}
       volumes:
         {{- include "extensionlib.deployment.volumes" (list .) | nindent 8 }}
+        {{- with .Values.extraVolumes }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
       serviceAccountName: {{ .Values.serviceAccount.name }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
