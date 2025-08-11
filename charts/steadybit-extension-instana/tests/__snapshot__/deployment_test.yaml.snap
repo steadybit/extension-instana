@@ -39,6 +39,8 @@ manifest should match snapshot using podAnnotations and Labels:
                       name: steadybit-extension-instana
                 - name: STEADYBIT_EXTENSION_BASE_URL
                   value: null
+                - name: STEADYBIT_EXTENSION_INSECURE_SKIP_VERIFY
+                  value: "false"
               image: ghcr.io/steadybit/extension-instana:v0.0.0
               imagePullPolicy: IfNotPresent
               livenessProbe:
@@ -123,6 +125,8 @@ manifest should match snapshot with TLS:
                       name: steadybit-extension-instana
                 - name: STEADYBIT_EXTENSION_BASE_URL
                   value: null
+                - name: STEADYBIT_EXTENSION_INSECURE_SKIP_VERIFY
+                  value: "false"
               image: ghcr.io/steadybit/extension-instana:v0.0.0
               imagePullPolicy: IfNotPresent
               livenessProbe:
@@ -171,6 +175,96 @@ manifest should match snapshot with TLS:
               secret:
                 optional: false
                 secretName: server-cert
+manifest should match snapshot with custom certificates mounted:
+  1: |
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      labels:
+        steadybit.com/discovery-disabled: "true"
+        steadybit.com/extension: "true"
+      name: RELEASE-NAME-steadybit-extension-instana
+      namespace: NAMESPACE
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app.kubernetes.io/instance: RELEASE-NAME
+          app.kubernetes.io/name: steadybit-extension-instana
+      template:
+        metadata:
+          annotations:
+            oneagent.dynatrace.com/injection: "false"
+          labels:
+            app.kubernetes.io/instance: RELEASE-NAME
+            app.kubernetes.io/name: steadybit-extension-instana
+            steadybit.com/discovery-disabled: "true"
+            steadybit.com/extension: "true"
+        spec:
+          containers:
+            - env:
+                - name: STEADYBIT_LOG_LEVEL
+                  value: INFO
+                - name: STEADYBIT_LOG_FORMAT
+                  value: text
+                - name: SSL_CERT_DIR
+                  value: /etc/ssl/extra-certs:/etc/ssl/certs
+                - name: STEADYBIT_EXTENSION_API_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      key: api-token
+                      name: steadybit-extension-instana
+                - name: STEADYBIT_EXTENSION_BASE_URL
+                  value: null
+                - name: STEADYBIT_EXTENSION_INSECURE_SKIP_VERIFY
+                  value: "false"
+              image: ghcr.io/steadybit/extension-instana:v0.0.0
+              imagePullPolicy: IfNotPresent
+              livenessProbe:
+                failureThreshold: 5
+                httpGet:
+                  path: /health/liveness
+                  port: 8091
+                initialDelaySeconds: 10
+                periodSeconds: 10
+                successThreshold: 1
+                timeoutSeconds: 5
+              name: extension
+              readinessProbe:
+                failureThreshold: 3
+                httpGet:
+                  path: /health/readiness
+                  port: 8091
+                initialDelaySeconds: 10
+                periodSeconds: 10
+                successThreshold: 1
+                timeoutSeconds: 1
+              resources:
+                limits:
+                  cpu: 200m
+                  memory: 128Mi
+                requests:
+                  cpu: 50m
+                  memory: 32Mi
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                    - ALL
+                readOnlyRootFilesystem: true
+              volumeMounts:
+                - mountPath: /etc/ssl/extra-certs
+                  name: extra-certs
+                  readOnly: true
+          securityContext:
+            runAsNonRoot: true
+            seccompProfile:
+              type: RuntimeDefault
+          serviceAccountName: steadybit-extension-instana
+          volumes:
+            - configMap:
+                name: instana-self-signed-ca
+              name: extra-certs
 manifest should match snapshot with extra env vars:
   1: |
     apiVersion: apps/v1
@@ -212,6 +306,8 @@ manifest should match snapshot with extra env vars:
                       name: steadybit-extension-instana
                 - name: STEADYBIT_EXTENSION_BASE_URL
                   value: null
+                - name: STEADYBIT_EXTENSION_INSECURE_SKIP_VERIFY
+                  value: "false"
               envFrom:
                 - configMapRef: null
                   name: env-configmap
@@ -299,6 +395,90 @@ manifest should match snapshot with extra labels:
                       name: steadybit-extension-instana
                 - name: STEADYBIT_EXTENSION_BASE_URL
                   value: null
+                - name: STEADYBIT_EXTENSION_INSECURE_SKIP_VERIFY
+                  value: "false"
+              image: ghcr.io/steadybit/extension-instana:v0.0.0
+              imagePullPolicy: IfNotPresent
+              livenessProbe:
+                failureThreshold: 5
+                httpGet:
+                  path: /health/liveness
+                  port: 8091
+                initialDelaySeconds: 10
+                periodSeconds: 10
+                successThreshold: 1
+                timeoutSeconds: 5
+              name: extension
+              readinessProbe:
+                failureThreshold: 3
+                httpGet:
+                  path: /health/readiness
+                  port: 8091
+                initialDelaySeconds: 10
+                periodSeconds: 10
+                successThreshold: 1
+                timeoutSeconds: 1
+              resources:
+                limits:
+                  cpu: 200m
+                  memory: 128Mi
+                requests:
+                  cpu: 50m
+                  memory: 32Mi
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                    - ALL
+                readOnlyRootFilesystem: true
+              volumeMounts: null
+          securityContext:
+            runAsNonRoot: true
+            seccompProfile:
+              type: RuntimeDefault
+          serviceAccountName: steadybit-extension-instana
+          volumes: null
+manifest should match snapshot with insecureSkipVerify enabled:
+  1: |
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      labels:
+        steadybit.com/discovery-disabled: "true"
+        steadybit.com/extension: "true"
+      name: RELEASE-NAME-steadybit-extension-instana
+      namespace: NAMESPACE
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app.kubernetes.io/instance: RELEASE-NAME
+          app.kubernetes.io/name: steadybit-extension-instana
+      template:
+        metadata:
+          annotations:
+            oneagent.dynatrace.com/injection: "false"
+          labels:
+            app.kubernetes.io/instance: RELEASE-NAME
+            app.kubernetes.io/name: steadybit-extension-instana
+            steadybit.com/discovery-disabled: "true"
+            steadybit.com/extension: "true"
+        spec:
+          containers:
+            - env:
+                - name: STEADYBIT_LOG_LEVEL
+                  value: INFO
+                - name: STEADYBIT_LOG_FORMAT
+                  value: text
+                - name: STEADYBIT_EXTENSION_API_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      key: api-token
+                      name: steadybit-extension-instana
+                - name: STEADYBIT_EXTENSION_BASE_URL
+                  value: null
+                - name: STEADYBIT_EXTENSION_INSECURE_SKIP_VERIFY
+                  value: "true"
               image: ghcr.io/steadybit/extension-instana:v0.0.0
               imagePullPolicy: IfNotPresent
               livenessProbe:
@@ -385,6 +565,8 @@ manifest should match snapshot with mutual TLS:
                       name: steadybit-extension-instana
                 - name: STEADYBIT_EXTENSION_BASE_URL
                   value: null
+                - name: STEADYBIT_EXTENSION_INSECURE_SKIP_VERIFY
+                  value: "false"
               image: ghcr.io/steadybit/extension-instana:v0.0.0
               imagePullPolicy: IfNotPresent
               livenessProbe:
@@ -485,6 +667,8 @@ manifest should match snapshot with mutual TLS using containerPaths:
                       name: steadybit-extension-instana
                 - name: STEADYBIT_EXTENSION_BASE_URL
                   value: null
+                - name: STEADYBIT_EXTENSION_INSECURE_SKIP_VERIFY
+                  value: "false"
               image: ghcr.io/steadybit/extension-instana:v0.0.0
               imagePullPolicy: IfNotPresent
               livenessProbe:
@@ -565,6 +749,8 @@ manifest should match snapshot with podSecurityContext:
                       name: steadybit-extension-instana
                 - name: STEADYBIT_EXTENSION_BASE_URL
                   value: null
+                - name: STEADYBIT_EXTENSION_INSECURE_SKIP_VERIFY
+                  value: "false"
               image: ghcr.io/steadybit/extension-instana:v0.0.0
               imagePullPolicy: IfNotPresent
               livenessProbe:
@@ -646,6 +832,8 @@ manifest should match snapshot with priority class:
                       name: steadybit-extension-instana
                 - name: STEADYBIT_EXTENSION_BASE_URL
                   value: null
+                - name: STEADYBIT_EXTENSION_INSECURE_SKIP_VERIFY
+                  value: "false"
               image: ghcr.io/steadybit/extension-instana:v0.0.0
               imagePullPolicy: IfNotPresent
               livenessProbe:
@@ -727,6 +915,8 @@ manifest should match snapshot without TLS:
                       name: steadybit-extension-instana
                 - name: STEADYBIT_EXTENSION_BASE_URL
                   value: null
+                - name: STEADYBIT_EXTENSION_INSECURE_SKIP_VERIFY
+                  value: "false"
               image: ghcr.io/steadybit/extension-instana:v0.0.0
               imagePullPolicy: IfNotPresent
               livenessProbe:

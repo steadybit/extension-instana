@@ -7,6 +7,7 @@ package config
 import (
 	"bytes"
 	"context"
+	"crypto/tls"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -25,7 +26,8 @@ type Specification struct {
 	// The Instana Base Url, like 'https://unit-example.instana.io'
 	BaseUrl string `json:"baseUrl" split_words:"true" required:"true"`
 	// The Instana API Token
-	ApiToken string `json:"apiToken" split_words:"true" required:"true"`
+	ApiToken           string `json:"apiToken" split_words:"true" required:"true"`
+	InsecureSkipVerify bool   `json:"insecureSkipVerify" split_words:"true" default:"false"`
 }
 
 var (
@@ -166,11 +168,6 @@ func (s *Specification) DeleteMaintenanceWindow(_ context.Context, maintenanceWi
 }
 
 func (s *Specification) do(url string, method string, body []byte) ([]byte, *http.Response, error) {
-	log.Debug().Str("url", url).Str("method", method).Msg("Requesting Instana API")
-	if body != nil {
-		log.Debug().Int("len", len(body)).Str("body", string(body)).Msg("Request body")
-	}
-
 	var bodyReader io.Reader
 	if body != nil {
 		bodyReader = bytes.NewReader(body)
@@ -183,7 +180,9 @@ func (s *Specification) do(url string, method string, body []byte) ([]byte, *htt
 	request.Header.Set("Content-Type", "application/json; charset=UTF-8")
 	request.Header.Set("Authorization", fmt.Sprintf("apiToken %s", s.ApiToken))
 
-	client := &http.Client{}
+	client := &http.Client{Transport: &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: s.InsecureSkipVerify},
+	}}
 	response, err := client.Do(request)
 	if err != nil {
 		log.Error().Err(err).Msgf("Failed to execute request")
