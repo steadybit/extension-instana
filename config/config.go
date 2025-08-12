@@ -1,6 +1,4 @@
-/*
- * Copyright 2023 steadybit GmbH. All rights reserved.
- */
+// Copyright 2025 steadybit GmbH. All rights reserved.
 
 package config
 
@@ -16,6 +14,7 @@ import (
 	"github.com/steadybit/extension-instana/types"
 	"io"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -39,6 +38,7 @@ func ParseConfiguration() {
 	if err != nil {
 		log.Fatal().Err(err).Msgf("Failed to parse configuration from environment.")
 	}
+	Config.BaseUrl = strings.TrimSuffix(Config.BaseUrl, "/")
 }
 func (s *Specification) GetSnapshotIds(_ context.Context, applicationPerspectiveId string) ([]string, error) {
 	url := fmt.Sprintf("%s/api/infrastructure-monitoring/snapshots?query=entity.application.id:%s&size=20000", s.BaseUrl, applicationPerspectiveId)
