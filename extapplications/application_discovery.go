@@ -42,7 +42,7 @@ func (d *applicationPerspectiveDiscovery) Describe() discovery_kit_api.Discovery
 func (d *applicationPerspectiveDiscovery) DescribeTarget() discovery_kit_api.TargetDescription {
 	return discovery_kit_api.TargetDescription{
 		Id:       ApplicationPerspectiveTargetId,
-		Label:    discovery_kit_api.PluralLabel{One: "Instana application perspective", Other: "Instana application perspectives"},
+		Label:    discovery_kit_api.PluralLabel{One: "Instana Application Perspective", Other: "Instana Application Perspectives"},
 		Category: extutil.Ptr("monitoring"),
 		Version:  extbuild.GetSemverVersionStringOrUnknown(),
 		Icon:     extutil.Ptr(applicationPerspectiveIcon),
