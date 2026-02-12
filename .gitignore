@@ -5,3 +5,5 @@
 /snyk.sarif
 /extension-instana.run.xml
 /gpg.key
+
+.env
