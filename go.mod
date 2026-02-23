@@ -11,7 +11,7 @@ require (
 	github.com/steadybit/discovery-kit/go/discovery_kit_api v1.7.1
 	github.com/steadybit/discovery-kit/go/discovery_kit_sdk v1.3.2
 	github.com/steadybit/discovery-kit/go/discovery_kit_test v1.2.1
-	github.com/steadybit/extension-kit v1.10.2
+	github.com/steadybit/extension-kit v1.10.3
 	github.com/stretchr/testify v1.11.1
 )
 
