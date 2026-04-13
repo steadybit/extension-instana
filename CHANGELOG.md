@@ -1,8 +1,10 @@
 # Changelog
 
-## (next)
+## v1.1.13
 
+- Bump Go to 1.25.9
 - Support if-none-match for the extension list endpoint
+- Update dependencies
 
 ## v1.1.12
 
