@@ -51,36 +51,36 @@ func (m *EventCheckAction) Describe() action_kit_api.ActionDescription {
 		Label:       "Event Check",
 		Description: "Checks for the existence of certain events in Instana.",
 		Version:     extbuild.GetSemverVersionStringOrUnknown(),
-		Icon:        extutil.Ptr(eventCheckActionIcon),
-		TargetSelection: extutil.Ptr(action_kit_api.TargetSelection{
+		Icon:        new(eventCheckActionIcon),
+		TargetSelection: new(action_kit_api.TargetSelection{
 			TargetType:          extapplications.ApplicationPerspectiveTargetId,
 			QuantityRestriction: extutil.Ptr(action_kit_api.QuantityRestrictionAll),
-			SelectionTemplates: extutil.Ptr([]action_kit_api.TargetSelectionTemplate{
+			SelectionTemplates: new([]action_kit_api.TargetSelectionTemplate{
 				{
 					Label: "application perspective label",
 					Query: "instana.application.label=\"\"",
 				},
 			}),
 		}),
-		Technology:  extutil.Ptr("Instana"),
+		Technology:  new("Instana"),
 		Kind:        action_kit_api.Check,
 		TimeControl: action_kit_api.TimeControlInternal,
 		Parameters: []action_kit_api.ActionParameter{
 			{
 				Name:         "duration",
 				Label:        "Duration",
-				Description:  extutil.Ptr(""),
+				Description:  new(""),
 				Type:         action_kit_api.ActionParameterTypeDuration,
-				DefaultValue: extutil.Ptr("30s"),
-				Order:        extutil.Ptr(1),
-				Required:     extutil.Ptr(true),
+				DefaultValue: new("30s"),
+				Order:        new(1),
+				Required:     new(true),
 			},
 			{
 				Name:        "condition",
 				Label:       "Condition",
-				Description: extutil.Ptr(""),
+				Description: new(""),
 				Type:        action_kit_api.ActionParameterTypeString,
-				Options: extutil.Ptr([]action_kit_api.ParameterOption{
+				Options: new([]action_kit_api.ParameterOption{
 					action_kit_api.ExplicitParameterOption{
 						Label: "No check, only show events",
 						Value: conditionShowOnly,
@@ -94,17 +94,17 @@ func (m *EventCheckAction) Describe() action_kit_api.ActionDescription {
 						Value: conditionAtLeastOneEvent,
 					},
 				}),
-				DefaultValue: extutil.Ptr(conditionShowOnly),
-				Order:        extutil.Ptr(2),
-				Required:     extutil.Ptr(true),
+				DefaultValue: new(conditionShowOnly),
+				Order:        new(2),
+				Required:     new(true),
 			},
 			{
 				Name:         "conditionCheckMode",
 				Label:        "Condition Check Mode",
-				Description:  extutil.Ptr("Should the step succeed if the condition is met at least once or all the time?"),
+				Description:  new("Should the step succeed if the condition is met at least once or all the time?"),
 				Type:         action_kit_api.ActionParameterTypeString,
-				DefaultValue: extutil.Ptr(conditionCheckModeAllTheTime),
-				Options: extutil.Ptr([]action_kit_api.ParameterOption{
+				DefaultValue: new(conditionCheckModeAllTheTime),
+				Options: new([]action_kit_api.ParameterOption{
 					action_kit_api.ExplicitParameterOption{
 						Label: "All the time",
 						Value: conditionCheckModeAllTheTime,
@@ -114,18 +114,18 @@ func (m *EventCheckAction) Describe() action_kit_api.ActionDescription {
 						Value: conditionCheckModeAtLeastOnce,
 					},
 				}),
-				Required: extutil.Ptr(true),
-				Order:    extutil.Ptr(3),
+				Required: new(true),
+				Order:    new(3),
 			},
 			{
 				Name:        "eventSeverityFilter", //-1 = INFO, 5 = WARN, 10 = CRITICAL
 				Label:       "Event Severity Filter",
-				Description: extutil.Ptr("Filter Problems by minimum severity."),
+				Description: new("Filter Problems by minimum severity."),
 				Type:        action_kit_api.ActionParameterTypeString,
-				Order:       extutil.Ptr(4),
-				Required:    extutil.Ptr(true),
-				Advanced:    extutil.Ptr(true),
-				Options: extutil.Ptr([]action_kit_api.ParameterOption{
+				Order:       new(4),
+				Required:    new(true),
+				Advanced:    new(true),
+				Options: new([]action_kit_api.ParameterOption{
 					action_kit_api.ExplicitParameterOption{
 						Label: "Info",
 						Value: severityInfo,
@@ -139,17 +139,17 @@ func (m *EventCheckAction) Describe() action_kit_api.ActionDescription {
 						Value: severityCritical,
 					},
 				}),
-				DefaultValue: extutil.Ptr(severityWarning),
+				DefaultValue: new(severityWarning),
 			},
 			{
 				Name:        "eventTypeFilters",
 				Label:       "Event Type Filter",
-				Description: extutil.Ptr("Filter Problems by an event type."),
+				Description: new("Filter Problems by an event type."),
 				Type:        action_kit_api.ActionParameterTypeStringArray,
-				Order:       extutil.Ptr(5),
-				Required:    extutil.Ptr(true),
-				Advanced:    extutil.Ptr(true),
-				Options: extutil.Ptr([]action_kit_api.ParameterOption{
+				Order:       new(5),
+				Required:    new(true),
+				Advanced:    new(true),
+				Options: new([]action_kit_api.ParameterOption{
 					action_kit_api.ExplicitParameterOption{
 						Label: "Incident",
 						Value: "INCIDENT",
@@ -159,10 +159,10 @@ func (m *EventCheckAction) Describe() action_kit_api.ActionDescription {
 						Value: "ISSUE",
 					},
 				}),
-				DefaultValue: extutil.Ptr("[\"INCIDENT\",\"ISSUE\"]"),
+				DefaultValue: new("[\"INCIDENT\",\"ISSUE\"]"),
 			},
 		},
-		Widgets: extutil.Ptr([]action_kit_api.Widget{
+		Widgets: new([]action_kit_api.Widget{
 			action_kit_api.StateOverTimeWidget{
 				Type:  action_kit_api.ComSteadybitWidgetStateOverTime,
 				Title: "Instana Events",
@@ -178,18 +178,18 @@ func (m *EventCheckAction) Describe() action_kit_api.ActionDescription {
 				Tooltip: action_kit_api.StateOverTimeWidgetTooltipConfig{
 					From: "tooltip",
 				},
-				Url: extutil.Ptr(action_kit_api.StateOverTimeWidgetUrlConfig{
-					From: extutil.Ptr("url"),
+				Url: new(action_kit_api.StateOverTimeWidgetUrlConfig{
+					From: new("url"),
 				}),
-				Value: extutil.Ptr(action_kit_api.StateOverTimeWidgetValueConfig{
-					Hide: extutil.Ptr(true),
+				Value: new(action_kit_api.StateOverTimeWidgetValueConfig{
+					Hide: new(true),
 				}),
 			},
 		}),
 		Prepare: action_kit_api.MutatingEndpointReference{},
 		Start:   action_kit_api.MutatingEndpointReference{},
-		Status: extutil.Ptr(action_kit_api.MutatingEndpointReferenceWithCallInterval{
-			CallInterval: extutil.Ptr("5s"),
+		Status: new(action_kit_api.MutatingEndpointReferenceWithCallInterval{
+			CallInterval: new("5s"),
 		}),
 	}
 }
@@ -279,13 +279,13 @@ func EventCheckStatus(ctx context.Context, state *EventCheckState, api EventsApi
 	var checkError *action_kit_api.ActionKitError
 	if state.ConditionCheckMode == conditionCheckModeAllTheTime {
 		if state.Condition == conditionNoEvents && len(filteredEvents) > 0 {
-			checkError = extutil.Ptr(action_kit_api.ActionKitError{
+			checkError = new(action_kit_api.ActionKitError{
 				Title:  fmt.Sprintf("No event expected, but %d events found.", len(filteredEvents)),
 				Status: extutil.Ptr(action_kit_api.Failed),
 			})
 		}
 		if state.Condition == conditionAtLeastOneEvent && len(filteredEvents) == 0 {
-			checkError = extutil.Ptr(action_kit_api.ActionKitError{
+			checkError = new(action_kit_api.ActionKitError{
 				Title:  "At least one event expected, but no events found.",
 				Status: extutil.Ptr(action_kit_api.Failed),
 			})
@@ -300,12 +300,12 @@ func EventCheckStatus(ctx context.Context, state *EventCheckState, api EventsApi
 		}
 		if completed && !state.ConditionCheckSuccess {
 			if state.Condition == conditionNoEvents {
-				checkError = extutil.Ptr(action_kit_api.ActionKitError{
+				checkError = new(action_kit_api.ActionKitError{
 					Title:  "No event expected, but events found.",
 					Status: extutil.Ptr(action_kit_api.Failed),
 				})
 			} else if state.Condition == conditionAtLeastOneEvent {
-				checkError = extutil.Ptr(action_kit_api.ActionKitError{
+				checkError = new(action_kit_api.ActionKitError{
 					Title:  "At least one event expected, but no events found.",
 					Status: extutil.Ptr(action_kit_api.Failed),
 				})
@@ -325,7 +325,7 @@ func eventsToMetrics(events []types.Event, now time.Time) *action_kit_api.Metric
 		tooltip := fmt.Sprintf("Event Problem: %s\nEvent Detail: %s\nEvent Type: %s\nEvent Severity: %d\nEntity Name: %s\nEntity Label: %s\nEntity Type: %s", event.Problem, event.Detail, event.Type, event.Severity, event.EntityName, event.EntityLabel, event.EntityType)
 		metrics = append(metrics,
 			action_kit_api.Metric{
-				Name: extutil.Ptr("instana_events"),
+				Name: new("instana_events"),
 				Metric: map[string]string{
 					"id":      event.EventId,
 					"title":   event.Problem + " - " + event.Detail,
@@ -338,7 +338,7 @@ func eventsToMetrics(events []types.Event, now time.Time) *action_kit_api.Metric
 			},
 		)
 	}
-	return extutil.Ptr(metrics)
+	return new(metrics)
 }
 
 func getState(severity int) string {
