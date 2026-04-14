@@ -48,32 +48,32 @@ func (m *CreateMaintenanceWindowAction) Describe() action_kit_api.ActionDescript
 		Label:       "Create Maintenance Window",
 		Description: "Start a Maintenance Window for a given duration.",
 		Version:     extbuild.GetSemverVersionStringOrUnknown(),
-		Icon:        extutil.Ptr(maintenanceWindowActionIcon),
-		TargetSelection: extutil.Ptr(action_kit_api.TargetSelection{
+		Icon:        new(maintenanceWindowActionIcon),
+		TargetSelection: new(action_kit_api.TargetSelection{
 			TargetType:          extapplications.ApplicationPerspectiveTargetId,
 			QuantityRestriction: extutil.Ptr(action_kit_api.QuantityRestrictionAll),
-			SelectionTemplates: extutil.Ptr([]action_kit_api.TargetSelectionTemplate{
+			SelectionTemplates: new([]action_kit_api.TargetSelectionTemplate{
 				{
 					Label: "application perspective label",
 					Query: "instana.application.label=\"\"",
 				},
 			}),
 		}),
-		Technology:  extutil.Ptr("Instana"),
+		Technology:  new("Instana"),
 		Kind:        action_kit_api.Other,
 		TimeControl: action_kit_api.TimeControlExternal,
 		Parameters: []action_kit_api.ActionParameter{
 			{
 				Name:         "duration",
 				Label:        "Duration",
-				Description:  extutil.Ptr(""),
+				Description:  new(""),
 				Type:         action_kit_api.ActionParameterTypeDuration,
-				DefaultValue: extutil.Ptr("30s"),
-				Order:        extutil.Ptr(1),
-				Required:     extutil.Ptr(true),
+				DefaultValue: new("30s"),
+				Order:        new(1),
+				Required:     new(true),
 			},
 		},
-		Stop: extutil.Ptr(action_kit_api.MutatingEndpointReference{}),
+		Stop: new(action_kit_api.MutatingEndpointReference{}),
 	}
 }
 

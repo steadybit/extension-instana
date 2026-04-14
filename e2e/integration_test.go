@@ -11,7 +11,6 @@ import (
 	"github.com/steadybit/extension-instana/extevents"
 	"github.com/steadybit/extension-instana/extmaintenance"
 	"github.com/steadybit/extension-kit/extlogging"
-	"github.com/steadybit/extension-kit/extutil"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"strings"
@@ -116,8 +115,8 @@ func testCreateMaintenanceWindow(t *testing.T, m *e2e.Minikube, e *e2e.Extension
 	}{Duration: 10000}
 
 	executionContext := &action_kit_api.ExecutionContext{
-		ExperimentKey: extutil.Ptr("TST-1"),
-		ExecutionId:   extutil.Ptr(47),
+		ExperimentKey: new("TST-1"),
+		ExecutionId:   new(47),
 	}
 
 	action, err := e.RunAction(extmaintenance.MaintenanceWindowActionId, target, config, executionContext)

@@ -11,7 +11,6 @@ import (
 	"github.com/steadybit/extension-instana/config"
 	"github.com/steadybit/extension-instana/types"
 	"github.com/steadybit/extension-kit/extbuild"
-	"github.com/steadybit/extension-kit/extutil"
 	"time"
 )
 
@@ -34,7 +33,7 @@ func (d *applicationPerspectiveDiscovery) Describe() discovery_kit_api.Discovery
 	return discovery_kit_api.DiscoveryDescription{
 		Id: ApplicationPerspectiveTargetId,
 		Discover: discovery_kit_api.DescribingEndpointReferenceWithCallInterval{
-			CallInterval: extutil.Ptr("1m"),
+			CallInterval: new("1m"),
 		},
 	}
 }
@@ -43,9 +42,9 @@ func (d *applicationPerspectiveDiscovery) DescribeTarget() discovery_kit_api.Tar
 	return discovery_kit_api.TargetDescription{
 		Id:       ApplicationPerspectiveTargetId,
 		Label:    discovery_kit_api.PluralLabel{One: "Instana Application Perspective", Other: "Instana Application Perspectives"},
-		Category: extutil.Ptr("monitoring"),
+		Category: new("monitoring"),
 		Version:  extbuild.GetSemverVersionStringOrUnknown(),
-		Icon:     extutil.Ptr(applicationPerspectiveIcon),
+		Icon:     new(applicationPerspectiveIcon),
 		Table: discovery_kit_api.Table{
 			Columns: []discovery_kit_api.Column{
 				{Attribute: "steadybit.label"},
