@@ -1,6 +1,6 @@
 module github.com/steadybit/extension-instana
 
-go 1.26.3
+go 1.26.4
 
 require (
 	github.com/kelseyhightower/envconfig v1.4.0
