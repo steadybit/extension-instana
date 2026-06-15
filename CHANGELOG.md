@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.1.17
+
+- chore(deps): bump alpine from 3.23 to 3.24
+
 ## v1.1.16
 
 - chore: update to go 1.26.4
