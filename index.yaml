@@ -11,6 +11,35 @@ entries:
         - name: Steadybit reliability hub
           url: https://hub.steadybit.com
     apiVersion: v2
+    appVersion: v1.1.17
+    created: "2026-06-15T08:02:51.067388112Z"
+    dependencies:
+    - name: extensionlib
+      repository: https://steadybit.github.io/helm-charts
+      version: ^1.5.2
+    description: Steadybit instana extension Helm chart for Kubernetes.
+    digest: a907f0944a0677fb09b9c4c5b2ccfb8f4596e80ade23d358aa3c4dd0766f9224
+    home: https://www.steadybit.com/
+    icon: https://steadybit-website-assets.s3.amazonaws.com/logo-symbol-transparent.png
+    maintainers:
+    - email: daniel.reuter@steadybit.com
+      name: reuda
+    name: steadybit-extension-instana
+    sources:
+    - https://github.com/steadybit/extension-instana
+    urls:
+    - https://github.com/steadybit/extension-instana/releases/download/steadybit-extension-instana-1.1.25/steadybit-extension-instana-1.1.25.tgz
+    version: 1.1.25
+  - annotations:
+      artifacthub.io/images: |
+        - name: logo
+          image: https://steadybit-website-assets.s3.amazonaws.com/logo-symbol-transparent.png
+      artifacthub.io/links: |-
+        - name: Steadybit website
+          url: https://www.steadybit.com
+        - name: Steadybit reliability hub
+          url: https://hub.steadybit.com
+    apiVersion: v2
     appVersion: v1.1.16
     created: "2026-06-12T10:56:00.164953883Z"
     dependencies:
@@ -784,4 +813,4 @@ entries:
     urls:
     - https://github.com/steadybit/extension-instana/releases/download/steadybit-extension-instana-1.0.0/steadybit-extension-instana-1.0.0.tgz
     version: 1.0.0
-generated: "2026-06-12T10:56:00.165230524Z"
+generated: "2026-06-15T08:02:51.067559959Z"
