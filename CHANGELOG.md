@@ -2,7 +2,6 @@
 
 ## v1.1.18
 
-- build: rename workflow_dispatch input labels for the GH UI
 - chore(deps): bump github.com/steadybit/extension-kit
 - chore(deps): bump golang.org/x/net to v0.55.0 (CVE-2026-39821) (#80)
 
