@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- fix: URL-escape values interpolated into Instana API requests — the maintenance-window id (derived from the experiment key) is path-escaped and the application/event query parameters are query-escaped, preventing path traversal and query-parameter injection
+- fix: guard the event check and maintenance-window actions against missing target attributes and non-numeric duration config instead of panicking
+
 ## v1.1.18
 
 - chore(deps): bump github.com/steadybit/extension-kit

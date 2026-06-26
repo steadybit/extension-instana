@@ -78,10 +78,14 @@ func (m *CreateMaintenanceWindowAction) Describe() action_kit_api.ActionDescript
 }
 
 func (m *CreateMaintenanceWindowAction) Prepare(_ context.Context, state *CreateMaintenanceWindowState, request action_kit_api.PrepareActionRequestBody) (*action_kit_api.PrepareResult, error) {
-	state.ApplicationPerspectiveId = request.Target.Attributes["instana.application.id"][0]
+	applicationPerspectiveIds := request.Target.Attributes["instana.application.id"]
+	if len(applicationPerspectiveIds) == 0 {
+		return nil, extension_kit.ToError("Target is missing the 'instana.application.id' attribute.", nil)
+	}
+	state.ApplicationPerspectiveId = applicationPerspectiveIds[0]
 	state.ExperimentKey = request.ExecutionContext.ExperimentKey
 	state.ExecutionId = request.ExecutionContext.ExecutionId
-	state.DurationInMillis = int64(request.Config["duration"].(float64))
+	state.DurationInMillis = extutil.ToInt64(request.Config["duration"])
 	return nil, nil
 }
 

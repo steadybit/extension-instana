@@ -195,7 +195,7 @@ func (m *EventCheckAction) Describe() action_kit_api.ActionDescription {
 }
 
 func (m *EventCheckAction) Prepare(ctx context.Context, state *EventCheckState, request action_kit_api.PrepareActionRequestBody) (*action_kit_api.PrepareResult, error) {
-	duration := request.Config["duration"].(float64)
+	duration := extutil.ToInt64(request.Config["duration"])
 	state.Start = time.Now()
 	state.End = time.Now().Add(time.Millisecond * time.Duration(duration))
 
@@ -223,7 +223,11 @@ func (m *EventCheckAction) Prepare(ctx context.Context, state *EventCheckState, 
 		state.ConditionCheckMode = fmt.Sprintf("%v", request.Config["conditionCheckMode"])
 	}
 
-	applicationPerspectiveId := request.Target.Attributes["instana.application.id"][0]
+	applicationPerspectiveIds := request.Target.Attributes["instana.application.id"]
+	if len(applicationPerspectiveIds) == 0 {
+		return nil, extension_kit.ToError("Target is missing the 'instana.application.id' attribute.", nil)
+	}
+	applicationPerspectiveId := applicationPerspectiveIds[0]
 	snapshotIds, err := config.Config.GetSnapshotIds(ctx, applicationPerspectiveId)
 	if err != nil {
 		return nil, extension_kit.ToError("Failed to get snapshot-ids from Instana.", err)

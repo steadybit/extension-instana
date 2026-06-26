@@ -14,6 +14,7 @@ import (
 	"github.com/steadybit/extension-instana/types"
 	"io"
 	"net/http"
+	"net/url"
 	"strings"
 	"time"
 )
@@ -41,9 +42,9 @@ func ParseConfiguration() {
 	Config.BaseUrl = strings.TrimSuffix(Config.BaseUrl, "/")
 }
 func (s *Specification) GetSnapshotIds(_ context.Context, applicationPerspectiveId string) ([]string, error) {
-	url := fmt.Sprintf("%s/api/infrastructure-monitoring/snapshots?query=entity.application.id:%s&size=20000", s.BaseUrl, applicationPerspectiveId)
+	requestUrl := fmt.Sprintf("%s/api/infrastructure-monitoring/snapshots?query=entity.application.id:%s&size=20000", s.BaseUrl, url.QueryEscape(applicationPerspectiveId))
 
-	responseBody, response, err := s.do(url, "GET", nil)
+	responseBody, response, err := s.do(requestUrl, "GET", nil)
 	if err != nil {
 		log.Error().Err(err).Msgf("Failed to get snapshot-ids from Instana. Full response %+v", string(responseBody))
 		return nil, err
@@ -77,12 +78,12 @@ func (s *Specification) GetSnapshotIds(_ context.Context, applicationPerspective
 }
 
 func (s *Specification) GetEvents(_ context.Context, from time.Time, to time.Time, eventTypeFilters []string) ([]types.Event, error) {
-	url := fmt.Sprintf("%s/api/events?from=%d&to=%d", s.BaseUrl, from.UnixMilli(), to.UnixMilli())
+	requestUrl := fmt.Sprintf("%s/api/events?from=%d&to=%d", s.BaseUrl, from.UnixMilli(), to.UnixMilli())
 	for _, eventTypeFilter := range eventTypeFilters {
-		url = fmt.Sprintf("%s&eventTypeFilters=%s", url, eventTypeFilter)
+		requestUrl = fmt.Sprintf("%s&eventTypeFilters=%s", requestUrl, url.QueryEscape(eventTypeFilter))
 	}
 
-	responseBody, response, err := s.do(url, "GET", nil)
+	responseBody, response, err := s.do(requestUrl, "GET", nil)
 	if err != nil {
 		log.Error().Err(err).Msgf("Failed to get events from Instana. Full response %+v", string(responseBody))
 		return nil, err
@@ -140,7 +141,7 @@ func (s *Specification) CreateMaintenanceWindow(_ context.Context, maintenanceWi
 		return nil, nil, err
 	}
 
-	responseBody, response, err := s.do(fmt.Sprintf("%s/api/settings/v2/maintenance/%s", s.BaseUrl, maintenanceWindow.Id), "PUT", b)
+	responseBody, response, err := s.do(fmt.Sprintf("%s/api/settings/v2/maintenance/%s", s.BaseUrl, url.PathEscape(maintenanceWindow.Id)), "PUT", b)
 	if err != nil {
 		return nil, response, err
 	}
@@ -163,7 +164,7 @@ func (s *Specification) CreateMaintenanceWindow(_ context.Context, maintenanceWi
 }
 
 func (s *Specification) DeleteMaintenanceWindow(_ context.Context, maintenanceWindowId string) (*http.Response, error) {
-	_, response, err := s.do(fmt.Sprintf("%s/api/settings/v2/maintenance/%s", s.BaseUrl, maintenanceWindowId), "DELETE", nil)
+	_, response, err := s.do(fmt.Sprintf("%s/api/settings/v2/maintenance/%s", s.BaseUrl, url.PathEscape(maintenanceWindowId)), "DELETE", nil)
 	return response, err
 }
 
