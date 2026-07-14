@@ -1,9 +1,17 @@
 # Changelog
 
-## Unreleased
+## v1.1.19
 
+- chore(deps): bump github.com/steadybit/action-kit/go/action_kit_sdk
+- chore(deps): bump github.com/steadybit/discovery-kit/go/discovery_kit_sdk
+- chore(deps): bump github.com/steadybit/extension-kit
+- chore(deps): bump go to 1.26.5 (#89)
+- chore: add Claude Code workflows (#84)
+- chore: silence SonarQube finding on secrets: inherit in Claude workflows
 - fix: URL-escape values interpolated into Instana API requests — the maintenance-window id (derived from the experiment key) is path-escaped and the application/event query parameters are query-escaped, preventing path traversal and query-parameter injection
+- fix: escape Instana API URL values and guard handler panics (#85)
 - fix: guard the event check and maintenance-window actions against missing target attributes and non-numeric duration config instead of panicking
+- refactor: register extension index via exthttp.RegisterRevisionedHandler (#90)
 
 ## v1.1.18
 
