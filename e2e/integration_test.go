@@ -31,7 +31,7 @@ func TestWithMinikube(t *testing.T) {
 		ExtraArgs: func(m *e2e.Minikube) []string {
 			return []string{
 				"--set", "logging.level=debug",
-				"--set", "instana.apiKey=api-key-123",
+				"--set", "instana.apiToken=api-token-123",
 				"--set", fmt.Sprintf("instana.baseUrl=http://host.minikube.internal:%s", port),
 			}
 		},
