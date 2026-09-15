@@ -27,6 +27,7 @@ func main() {
 	extbuild.PrintBuildInformation()
 	extruntime.LogRuntimeInformation(zerolog.DebugLevel)
 	config.ParseConfiguration()
+	config.ValidateConfiguration()
 
 	exthealth.SetReady(false)
 	exthealth.StartProbes(8091)

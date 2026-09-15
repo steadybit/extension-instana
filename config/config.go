@@ -41,6 +41,18 @@ func ParseConfiguration() {
 	}
 	Config.BaseUrl = strings.TrimSuffix(Config.BaseUrl, "/")
 }
+
+func ValidateConfiguration() {
+	// envconfig's `required:"true"` only checks that the variable is *set*: an empty
+	// value satisfies it, so the extension would start with a blank configuration and
+	// fail much later against the target system. Reject blank values here instead.
+	if strings.TrimSpace(Config.BaseUrl) == "" {
+		log.Fatal().Msg("STEADYBIT_EXTENSION_BASE_URL must not be empty.")
+	}
+	if strings.TrimSpace(Config.ApiToken) == "" {
+		log.Fatal().Msg("STEADYBIT_EXTENSION_API_TOKEN must not be empty.")
+	}
+}
 func (s *Specification) GetSnapshotIds(_ context.Context, applicationPerspectiveId string) ([]string, error) {
 	requestUrl := fmt.Sprintf("%s/api/infrastructure-monitoring/snapshots?query=entity.application.id:%s&size=20000", s.BaseUrl, url.QueryEscape(applicationPerspectiveId))
 
