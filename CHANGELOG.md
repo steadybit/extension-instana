@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.1.29
+
+- chore(deps): bump github.com/steadybit/action-kit/go/action_kit_test
+- chore(deps): bump github.com/steadybit/extension-kit
+
 ## v1.1.28
 
 - chore(deps): bump golang.org/x/net to v0.61.0
