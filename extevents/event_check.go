@@ -62,9 +62,10 @@ func (m *EventCheckAction) Describe() action_kit_api.ActionDescription {
 				},
 			}),
 		}),
-		Technology:  new("Instana"),
-		Kind:        action_kit_api.Check,
-		TimeControl: action_kit_api.TimeControlInternal,
+		Technology:      new("Instana"),
+		Kind:            action_kit_api.Check,
+		TimeControl:     action_kit_api.TimeControlInternal,
+		ParameterGroups: new([]action_kit_api.ParameterGroup{eventFilterGroup}),
 		Parameters: []action_kit_api.ActionParameter{
 			{
 				Name:         "duration",
@@ -125,6 +126,7 @@ func (m *EventCheckAction) Describe() action_kit_api.ActionDescription {
 				Order:       new(4),
 				Required:    new(true),
 				Advanced:    new(true),
+				Group:       new(groupEventFilter),
 				Options: new([]action_kit_api.ParameterOption{
 					action_kit_api.ExplicitParameterOption{
 						Label: "Info",
@@ -149,6 +151,7 @@ func (m *EventCheckAction) Describe() action_kit_api.ActionDescription {
 				Order:       new(5),
 				Required:    new(true),
 				Advanced:    new(true),
+				Group:       new(groupEventFilter),
 				Options: new([]action_kit_api.ParameterOption{
 					action_kit_api.ExplicitParameterOption{
 						Label: "Incident",

@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- feat: the event check shows its severity and event type filters in an "Event Filter" group on platforms that support parameter groups
+
 ## v1.1.29
 
 - chore(deps): bump github.com/steadybit/action-kit/go/action_kit_test
