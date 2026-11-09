@@ -1,7 +1,9 @@
 # Changelog
 
-## Unreleased
+## v1.1.30
 
+- chore(deps): bump golang.org/x/net to v0.62.0
+- feat: show the event filters of the Instana event check in a group
 - feat: the event check shows its severity and event type filters in an "Event Filter" group on platforms that support parameter groups
 
 ## v1.1.29
