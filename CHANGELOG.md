@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.1.31
+
+- chore(deps): bump the steadybit group with 2 updates
+
 ## v1.1.30
 
 - chore(deps): bump golang.org/x/net to v0.62.0
